@@ -1,0 +1,12 @@
+[server]
+user=USER
+basedir=HOME/bd2_23L_z09_mysql/mysql
+datadir=HOME/bd2_23L_z09_mysql/mysql/data
+
+[mysqld]
+pid-file=HOME/bd2_23L_z09_mysql/mysqld.pid
+socket=HOME/bd2_23L_z09_mysql/mysqld.sock
+port=31666
+
+[client]
+socket=HOME/bd2_23L_z09_mysql/socket
