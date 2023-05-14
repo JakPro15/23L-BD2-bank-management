@@ -1,7 +1,7 @@
 #!/bin/bash
 # Script for easier MySQL administration
 
-source Scripts/mysql_variables.sh
+source shell_scripts/mysql_variables.sh
 
 case $1 in
 "")
