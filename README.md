@@ -5,3 +5,6 @@ https://docs.google.com/document/d/1skbyKSlhSn320t2YR83KhIkbkRXluPliXLINKGTkQZ4/
 * Należy uruchomić skrypt instalacyjny `install.sh`. Jeżeli wyświetlony zostanie napis "Error
 while loading shared libraries", należy brakujące biblioteki doinstalować i uruchomić skrypt ponownie. Potrzebna
 może się okazać instalacja pakietów libnuma1, libtinfo5, libaio1 lub innych.
+
+#### Zależności
+* libmysqlclient-dev
