@@ -12,7 +12,16 @@ CREATE TABLE KLIENCI (
     plec CHAR(1),
     nazwa VARCHAR(50),
     NIP CHAR(12),
-    CONSTRAINT kontakt CHECK(numer_telefonu IS NOT NULL OR email IS NOT NULL)
+    CONSTRAINT kontakt CHECK(numer_telefonu IS NOT NULL OR email IS NOT NULL),
+    CONSTRAINT podtyp CHECK(
+        (selektor = 'osoba'
+            AND imie IS NOT NULL AND nazwisko IS NOT NULL AND PESEL IS NOT NULL AND plec IS NOT NULL
+            AND nazwa IS NULL AND NIP IS NULL)
+        OR
+        (selektor = 'firma'
+            AND nazwa IS NOT NULL AND NIP IS NOT NULL
+            AND imie IS NULL AND nazwisko IS NULL AND PESEL IS NULL AND plec IS NULL)
+    )
 );
 
 CREATE TABLE TYPY_KONTA (
@@ -114,6 +123,10 @@ CREATE TABLE TRANSAKCJE (
     skrot_nazwy_waluty_1 CHAR(3) NOT NULL REFERENCES SALDA(skrot_nazwy_waluty),
     ID_konta_2 INT REFERENCES SALDA(ID_konta),
     skrot_nazwy_waluty_2 CHAR(3) REFERENCES SALDA(skrot_nazwy_waluty),
-    ID_konta_zewnetrznego INT REFERENCES KONTA_ZEWNETRZNE(ID_konta_zewnetrznego)
+    ID_konta_zewnetrznego INT REFERENCES KONTA_ZEWNETRZNE(ID_konta_zewnetrznego),
+    CONSTRAINT łuk CHECK(
+        (ID_konta_2 IS NOT NULL AND skrot_nazwy_waluty_2 IS NOT NULL AND ID_konta_zewnetrznego IS NULL)
+        OR
+        (ID_konta_2 IS NULL AND skrot_nazwy_waluty_2 IS NULL AND ID_konta_zewnetrznego IS NOT NULL)
+    )
 );
-
