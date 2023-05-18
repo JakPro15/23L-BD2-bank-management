@@ -1,7 +1,7 @@
 #!/usr/bin/bash
 
 uic="pyside6-uic"
-src_path="../src/ui"
+src_path="../src/ui/generated"
 
 # Get the absolute path of the script file with symbolic links resolved
 SCRIPT_PATH="$(realpath -s "${BASH_SOURCE[0]}")"
