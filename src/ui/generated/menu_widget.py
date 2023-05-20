@@ -30,42 +30,42 @@ class Ui_MenuWidget(object):
 
         self.horizontalLayout.addItem(self.left_spacer)
 
-        self.verticalLayout = QVBoxLayout()
-        self.verticalLayout.setObjectName(u"verticalLayout")
+        self.buttons_section = QVBoxLayout()
+        self.buttons_section.setObjectName(u"buttons_section")
         self.top_spacer = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
 
-        self.verticalLayout.addItem(self.top_spacer)
+        self.buttons_section.addItem(self.top_spacer)
 
         self.transactions_button = QPushButton(MenuWidget)
         self.transactions_button.setObjectName(u"transactions_button")
-        self.transactions_button.setMinimumSize(QSize(160, 40))
+        self.transactions_button.setMinimumSize(QSize(400, 60))
 
-        self.verticalLayout.addWidget(self.transactions_button)
+        self.buttons_section.addWidget(self.transactions_button)
 
         self.clients_button = QPushButton(MenuWidget)
         self.clients_button.setObjectName(u"clients_button")
-        self.clients_button.setMinimumSize(QSize(160, 40))
+        self.clients_button.setMinimumSize(QSize(400, 60))
 
-        self.verticalLayout.addWidget(self.clients_button)
+        self.buttons_section.addWidget(self.clients_button)
 
         self.accounts_button = QPushButton(MenuWidget)
         self.accounts_button.setObjectName(u"accounts_button")
-        self.accounts_button.setMinimumSize(QSize(160, 40))
+        self.accounts_button.setMinimumSize(QSize(400, 60))
 
-        self.verticalLayout.addWidget(self.accounts_button)
+        self.buttons_section.addWidget(self.accounts_button)
 
-        self.pushButton = QPushButton(MenuWidget)
-        self.pushButton.setObjectName(u"pushButton")
-        self.pushButton.setMinimumSize(QSize(160, 40))
+        self.quit_button = QPushButton(MenuWidget)
+        self.quit_button.setObjectName(u"quit_button")
+        self.quit_button.setMinimumSize(QSize(400, 60))
 
-        self.verticalLayout.addWidget(self.pushButton)
+        self.buttons_section.addWidget(self.quit_button)
 
         self.bottom_spacer = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
 
-        self.verticalLayout.addItem(self.bottom_spacer)
+        self.buttons_section.addItem(self.bottom_spacer)
 
 
-        self.horizontalLayout.addLayout(self.verticalLayout)
+        self.horizontalLayout.addLayout(self.buttons_section)
 
         self.right_spacer = QSpacerItem(301, 22, QSizePolicy.Expanding, QSizePolicy.Minimum)
 
@@ -82,6 +82,6 @@ class Ui_MenuWidget(object):
         self.transactions_button.setText(QCoreApplication.translate("MenuWidget", u"Transactions", None))
         self.clients_button.setText(QCoreApplication.translate("MenuWidget", u"Clients", None))
         self.accounts_button.setText(QCoreApplication.translate("MenuWidget", u"Accounts", None))
-        self.pushButton.setText(QCoreApplication.translate("MenuWidget", u"Quit", None))
+        self.quit_button.setText(QCoreApplication.translate("MenuWidget", u"Quit", None))
     # retranslateUi
 

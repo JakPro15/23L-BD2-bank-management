@@ -11,7 +11,7 @@ OUT_DIR="$(dirname "$SCRIPT_PATH")/$src_path"
 
 # Find all .ui files in the directory and its subdirectories,
 # and print their paths relative to the script's path
-find "$(dirname "$SCRIPT_PATH")" -name "*.ui" -type f -print0 | while read -d $'\0' FILE; do
+find "$(dirname "$SCRIPT_PATH")" -name "*.ui" -type f -print0 | while read -r -d $'\0' FILE; do
     # Get the absolute path of the file with symbolic links resolved
     ABS_PATH="$(realpath -s "$FILE")"
 
