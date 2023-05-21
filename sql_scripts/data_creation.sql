@@ -13,18 +13,18 @@ INSERT INTO KLIENCI VALUES (NULL, 'Rynkowa 4, Kraków', 'marek.kowalczyk@gmail.c
 INSERT INTO KLIENCI VALUES (NULL, 'Piękna 5, Gdynia', 'krzysztof.rutkowski@gmail.com', '909484101', 'osoba', 'Krzysztof', 'Rutkowski', '80010705856', 'M', NULL, NULL);
 INSERT INTO KLIENCI VALUES (NULL, 'Migowa 47, Marzeńsk', 'agnieszka.kwiatkowska@gmail.com', '112112112', 'osoba', 'Agnieszka', 'Kwiatkowska', '65031012345', 'K', NULL, NULL);
 INSERT INTO KLIENCI VALUES (NULL, 'Kwiatowa 15D, Uśmiechowo', 'tomasz.nowakowski@gmail.com', '997997997', 'osoba', 'Tomasz', 'Nowakowski', '70012054321', 'M', NULL, NULL);
-INSERT INTO KLIENCI VALUES (NULL, 'Uliczna 64, Bajkowo', 'ewa.jablonska456@gmail.com', '213721150', 'osoba', 'Ewa', 'Jabłońska', '80011012345', 'K', NULL, NULL);
-INSERT INTO KLIENCI VALUES (NULL, 'Wiatrowa 92C, Radosne', 'marek.kowalczyk@gmail.com', '420213700', 'osoba', 'Marek', 'Kowalczyk', '84050123456', 'M', NULL, NULL);
-INSERT INTO KLIENCI VALUES (NULL, 'Podwójna 33, Migotowo', 'dorota.wieczorek@gmail.com', '666000666', 'osoba', 'Dorota', 'Wieczorek', '83120567890', 'K', NULL, NULL);
-INSERT INTO KLIENCI VALUES (NULL, 'Kosmiczna 78, Cudowo', 'grzegorz.bak@gmail.com', '141252292', 'osoba', 'Grzegorz', 'Bąk', '95121567890', 'M', NULL, NULL);
-INSERT INTO KLIENCI VALUES (NULL, 'Skrętna 23F, Zielnowo', 'karolina.czajka@wp.pl', '987999123', 'osoba', 'Karolina', 'Czajka', '00051123456', 'K', NULL, NULL);
-INSERT INTO KLIENCI VALUES (NULL, 'Kobieca 6, Niezwykłowo', 'pawel.duda@o2.pl', '241289102', 'osoba', 'Paweł', 'Duda', '01010123456', 'M', NULL, NULL);
-INSERT INTO KLIENCI VALUES (NULL, 'Morska 57G, Szczęście', 'magda.fijolek@gmail.com', '901234567', 'osoba', 'Magda', 'Fijołek', '96011223456', 'K', NULL, NULL);
-INSERT INTO KLIENCI VALUES (NULL, 'Słoneczna 9, Malinowy', 'ewa.lisowska@wp.pl', '555779999', 'osoba', 'Ewa', 'Lisowska', '92101502856', 'K', NULL, NULL);
-INSERT INTO KLIENCI VALUES (NULL, 'Polna 44, Grójec', 'mariusz.mazurkiewicz@o2.pl', '555776666', 'osoba', 'Mariusz', 'Mazurkiewicz', '50011307856', 'M', NULL, NULL);
-INSERT INTO KLIENCI VALUES (NULL, 'Orzechowa 4C, Płońsk', 'agnieszka.nowacka@gmail.com', '555773333', 'osoba', 'Agnieszka', 'Nowacka', '72012009856', 'K', NULL, NULL);
-INSERT INTO KLIENCI VALUES (NULL, 'Lubaszna 55A, Białystok', 'damian.olszewski@wp.pl', '555771111', 'osoba', 'Damian', 'Olszewski', '85020904856', 'M', NULL, NULL);
-INSERT INTO KLIENCI VALUES (NULL, 'Bierna 7, Przemyśl', 'katarzyna.piotrowska@o2.pl', '555772222', 'osoba', 'Katarzyna', 'Piotrowska', '91011802856', 'K', NULL, NULL);
+INSERT INTO KLIENCI VALUES (NULL, 'Uliczna 64, Bajkowo', 'ewa.jablonska456@gmail.com', '213721150', 'firma', NULL, NULL, NULL, NULL, 'company_one', 1234567890);
+INSERT INTO KLIENCI VALUES (NULL, 'Wiatrowa 92C, Radosne', 'marek.kowalczyk@gmail.com', '420213700', 'firma', NULL, NULL, NULL, NULL, 'tech_solutions', 9876543210);
+INSERT INTO KLIENCI VALUES (NULL, 'Podwójna 33, Migotowo', 'dorota.wieczorek@gmail.com', '666000666', 'firma', NULL, NULL, NULL, NULL, 'global_industries', 2468135790);
+INSERT INTO KLIENCI VALUES (NULL, 'Kosmiczna 78, Cudowo', 'grzegorz.bak@gmail.com', '141252292', 'firma', NULL, NULL, NULL, NULL, 'inno_systems', 1357924680);
+INSERT INTO KLIENCI VALUES (NULL, 'Skrętna 23F, Zielnowo', 'karolina.czajka@wp.pl', '987999123', 'firma', NULL, NULL, NULL, NULL, 'smart_tech', 8642097531);
+INSERT INTO KLIENCI VALUES (NULL, 'Kobieca 6, Niezwykłowo', 'pawel.duda@o2.pl', '241289102', 'firma', NULL, NULL, NULL, NULL, 'future_vision', 9753102468);
+INSERT INTO KLIENCI VALUES (NULL, 'Morska 57G, Szczęście', 'magda.fijolek@gmail.com', '901234567', 'firma', NULL, NULL, NULL, NULL, 'creative_minds', 5820369174);
+INSERT INTO KLIENCI VALUES (NULL, 'Słoneczna 9, Malinowy', 'ewa.lisowska@wp.pl', '555779999', 'firma', NULL, NULL, NULL, NULL, 'digital_nexus', 7194362058);
+INSERT INTO KLIENCI VALUES (NULL, 'Polna 44, Grójec', 'mariusz.mazurkiewicz@o2.pl', '555776666', 'firma', NULL, NULL, NULL, NULL, 'prime_solutions', 3041578269);
+INSERT INTO KLIENCI VALUES (NULL, 'Orzechowa 4C, Płońsk', 'agnieszka.nowacka@gmail.com', '555773333', 'firma', NULL, NULL, NULL, NULL, 'alpha_enterprises', 6978134025);
+INSERT INTO KLIENCI VALUES (NULL, 'Lubaszna 55A, Białystok', 'damian.olszewski@wp.pl', '555771111', 'firma', NULL, NULL, NULL, NULL, 'stellar_innovations', 2154687039);
+INSERT INTO KLIENCI VALUES (NULL, 'Bierna 7, Przemyśl', 'katarzyna.piotrowska@o2.pl', '555772222', 'firma', NULL, NULL, NULL, NULL, 'synergy_tech', 8391275604);
 -- warto dopisac klientow dla firmy
 
 
