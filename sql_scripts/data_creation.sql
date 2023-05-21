@@ -25,8 +25,6 @@ INSERT INTO KLIENCI VALUES (NULL, 'Polna 44, Grójec', 'mariusz.mazurkiewicz@o2.
 INSERT INTO KLIENCI VALUES (NULL, 'Orzechowa 4C, Płońsk', 'agnieszka.nowacka@gmail.com', '555773333', 'firma', NULL, NULL, NULL, NULL, 'alpha_enterprises', 6978134025);
 INSERT INTO KLIENCI VALUES (NULL, 'Lubaszna 55A, Białystok', 'damian.olszewski@wp.pl', '555771111', 'firma', NULL, NULL, NULL, NULL, 'stellar_innovations', 2154687039);
 INSERT INTO KLIENCI VALUES (NULL, 'Bierna 7, Przemyśl', 'katarzyna.piotrowska@o2.pl', '555772222', 'firma', NULL, NULL, NULL, NULL, 'synergy_tech', 8391275604);
--- warto dopisac klientow dla firmy
-
 
 -- INSERT INTO TYPY_KONTA
 INSERT INTO TYPY_KONTA VALUES (NULL, 'osobiste', 1);
