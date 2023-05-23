@@ -1,8 +1,18 @@
 USE `bd2-23L-z09`;
 
+CREATE TABLE ADRESY (
+    ID_adresu INT AUTO_INCREMENT PRIMARY KEY,
+    kraj VARCHAR(40) NOT NULL,
+    miejscowosc VARCHAR(100) NOT NULL,
+    kod_pocztowy VARCHAR(10) NOT NULL,
+    ulica VARCHAR(100) NOT NULL,
+    numer_domu VARCHAR(8) NOT NULL,
+    numer_mieszkania VARCHAR(8)
+);
+
 CREATE TABLE KLIENCI (
     ID_klienta INT AUTO_INCREMENT PRIMARY KEY,
-    adres TEXT NOT NULL,
+    ID_adresu INT NOT NULL REFERENCES ADRESY(ID_adresu),
     email VARCHAR(50),
     numer_telefonu CHAR(10),
     selektor CHAR(5) NOT NULL,
@@ -103,7 +113,7 @@ CREATE TABLE BANKI (
     ID_banku INT AUTO_INCREMENT PRIMARY KEY,
     nazwa VARCHAR(50) NOT NULL,
     NIP CHAR(12) NOT NULL,
-    adres TEXT NOT NULL
+    ID_adresu INT NOT NULL REFERENCES ADRESY(ID_adresu)
 );
 
 CREATE TABLE KONTA_ZEWNETRZNE (
@@ -118,7 +128,7 @@ CREATE TABLE TRANSAKCJE (
     kwota_po DECIMAL(40, 20) NOT NULL,
     data_transakcji DATE DEFAULT (CURRENT_DATE) NOT NULL,
     tytul VARCHAR(50) NOT NULL,
-    adres_odbiorcy TEXT,
+    adres_odbiorcy VARCHAR(100),
     ID_konta_1 INT NOT NULL REFERENCES SALDA(ID_konta),
     skrot_nazwy_waluty_1 CHAR(3) NOT NULL REFERENCES SALDA(skrot_nazwy_waluty),
     ID_konta_2 INT REFERENCES SALDA(ID_konta),
