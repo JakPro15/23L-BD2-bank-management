@@ -1,29 +1,40 @@
-import PySide6.QtSql as sql
-from database_errors import DatabaseConnectionError, DatabaseTransactionError
 from contextlib import contextmanager
 from os.path import expanduser
+
+import PySide6.QtSql as sql
+
+from database_errors import DatabaseConnectionError, DatabaseTransactionError
+
 
 class Database:
     def __init__(self) -> None:
         self.connection = sql.QSqlDatabase.addDatabase("QMYSQL")
 
-        if(not self.connection.isValid()):
-            raise DatabaseConnectionError(f"Could not open a valid connection: {self.connection.lastError().text()}")
-        
+        if not self.connection.isValid():
+            error_text = self.connection.lastError().text()
+            raise DatabaseConnectionError(
+                f"Could not open a valid connection: {error_text}"
+            )
+
         with open("others/connection_properties", "r") as file:
             user = file.readline().strip()
             password = file.readline().strip()
             port_nr = int(file.readline().strip())
             socket_path = file.readline().strip()
 
-        self.connection.setConnectOptions(f"UNIX_SOCKET={expanduser(f'~/{socket_path}')}")
+        self.connection.setConnectOptions(
+            f"UNIX_SOCKET={expanduser(f'~/{socket_path}')}"
+        )
 
         self.connection.setDatabaseName(user)
         self.connection.setPort(port_nr)
         self.connection.open(user, password)
 
-        if(self.connection.isOpenError()):
-            raise DatabaseConnectionError(f"Could not connect to the database: {self.connection.lastError().text()}")
+        if self.connection.isOpenError():
+            error_text = self.connection.lastError().text()
+            raise DatabaseConnectionError(
+                f"Could not connect to the database: {error_text}"
+            )
 
     @contextmanager
     def transaction(self):
@@ -35,7 +46,16 @@ class Database:
             self.connection.rollback()
             raise
 
-    def add_client_person(self, adress: str, email: str, nr_tel: str, name: str, surname: str, PESEL: str, gender: str) -> None:
+    def add_client_person(
+        self,
+        adress: str,
+        email: str,
+        nr_tel: str,
+        name: str,
+        surname: str,
+        PESEL: str,
+        gender: str,
+    ) -> None:
         with self.transaction():
             query = sql.QSqlQuery(self.connection)
             query.prepare(
@@ -52,9 +72,13 @@ class Database:
             query.bindValue(":gender", gender)
 
             if not query.exec():
-                raise DatabaseTransactionError(f"Could not insert the client into the database")
-            
-    def add_client_company(self, adress: str, email: str, nr_tel: str, name: str, NIP: str) -> None:
+                raise DatabaseTransactionError(
+                    "Could not insert the client into the database"
+                )
+
+    def add_client_company(
+        self, adress: str, email: str, nr_tel: str, name: str, NIP: str
+    ) -> None:
         with self.transaction():
             query = sql.QSqlQuery(self.connection)
             query.prepare(
@@ -69,8 +93,10 @@ class Database:
             query.bindValue(":NIP", NIP)
 
             if not query.exec():
-                raise DatabaseTransactionError(f"Could not insert the client into the database")
-            
+                raise DatabaseTransactionError(
+                    "Could not insert the client into the database"
+                )
+
     def show_client_data_people(self) -> list[dict[str, int | str]]:
         query = sql.QSqlQuery(self.connection)
         query.prepare(
@@ -79,8 +105,10 @@ class Database:
         )
 
         if not query.exec():
-            raise DatabaseTransactionError(f"Could not collect specified client data")
-        
+            raise DatabaseTransactionError(
+                "Could not collect specified client data"
+            )
+
         result: list[dict[str, int | str]] = []
         while query.next():
             data = {
@@ -96,7 +124,7 @@ class Database:
             result.append(data)
 
         return result
-    
+
     def show_client_data_companies(self) -> list[dict[str, int | str]]:
         query = sql.QSqlQuery(self.connection)
         query.prepare(
@@ -105,8 +133,10 @@ class Database:
         )
 
         if not query.exec():
-            raise DatabaseTransactionError(f"Could not collect specified client data")
-        
+            raise DatabaseTransactionError(
+                "Could not collect specified client data"
+            )
+
         result: list[dict[str, int | str]] = []
         while query.next():
             data = {
@@ -115,12 +145,12 @@ class Database:
                 "email": query.value(2),
                 "numer_telefonu": query.value(3),
                 "nazwa": query.value(4),
-                "NIP": query.value(5)
+                "NIP": query.value(5),
             }
             result.append(data)
 
         return result
-    
+
     def delete_client(self, id: int) -> None:
         with self.transaction():
             query = sql.QSqlQuery(self.connection)
@@ -129,7 +159,10 @@ class Database:
             query.bindValue(":id", id)
 
             if not query.exec():
-                raise DatabaseTransactionError(f"Could not delete the client from the database")
+                raise DatabaseTransactionError(
+                    "Could not delete the client from the database"
+                )
+
 
 if __name__ == "__main__":
     db = Database()

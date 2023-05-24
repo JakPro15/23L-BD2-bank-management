@@ -130,6 +130,9 @@
      </item>
      <item>
       <widget class="QPushButton" name="account_info_button">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
        <property name="text">
         <string>Detailed account info...</string>
        </property>

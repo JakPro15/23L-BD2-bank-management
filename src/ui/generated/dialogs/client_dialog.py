@@ -24,7 +24,7 @@ class Ui_ClientDialog(object):
     def setupUi(self, ClientDialog):
         if not ClientDialog.objectName():
             ClientDialog.setObjectName(u"ClientDialog")
-        ClientDialog.resize(474, 513)
+        ClientDialog.resize(400, 300)
         sizePolicy = QSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -37,6 +37,8 @@ class Ui_ClientDialog(object):
         self.main_section.setLabelAlignment(Qt.AlignCenter)
         self.address_label = QLabel(ClientDialog)
         self.address_label.setObjectName(u"address_label")
+        self.address_label.setMinimumSize(QSize(96, 0))
+        self.address_label.setAlignment(Qt.AlignCenter)
 
         self.main_section.setWidget(0, QFormLayout.LabelRole, self.address_label)
 
@@ -56,22 +58,30 @@ class Ui_ClientDialog(object):
         self.main_section.setWidget(2, QFormLayout.FieldRole, self.phone_line_edit)
 
         self.selector_combo_box = QComboBox(ClientDialog)
+        self.selector_combo_box.addItem("")
+        self.selector_combo_box.addItem("")
         self.selector_combo_box.setObjectName(u"selector_combo_box")
 
         self.main_section.setWidget(3, QFormLayout.FieldRole, self.selector_combo_box)
 
         self.email_label = QLabel(ClientDialog)
         self.email_label.setObjectName(u"email_label")
+        self.email_label.setMinimumSize(QSize(96, 0))
+        self.email_label.setAlignment(Qt.AlignCenter)
 
         self.main_section.setWidget(1, QFormLayout.LabelRole, self.email_label)
 
         self.phone_label = QLabel(ClientDialog)
         self.phone_label.setObjectName(u"phone_label")
+        self.phone_label.setMinimumSize(QSize(96, 0))
+        self.phone_label.setAlignment(Qt.AlignCenter)
 
         self.main_section.setWidget(2, QFormLayout.LabelRole, self.phone_label)
 
         self.selector_label = QLabel(ClientDialog)
         self.selector_label.setObjectName(u"selector_label")
+        self.selector_label.setMinimumSize(QSize(96, 0))
+        self.selector_label.setAlignment(Qt.AlignCenter)
 
         self.main_section.setWidget(3, QFormLayout.LabelRole, self.selector_label)
 
@@ -80,6 +90,104 @@ class Ui_ClientDialog(object):
 
         self.additional_data_stack = QStackedWidget(ClientDialog)
         self.additional_data_stack.setObjectName(u"additional_data_stack")
+        self.person_page = QWidget()
+        self.person_page.setObjectName(u"person_page")
+        self.verticalLayout_2 = QVBoxLayout(self.person_page)
+        self.verticalLayout_2.setObjectName(u"verticalLayout_2")
+        self.verticalLayout_2.setContentsMargins(0, 0, 0, 0)
+        self.formLayout = QFormLayout()
+        self.formLayout.setObjectName(u"formLayout")
+        self.formLayout.setLabelAlignment(Qt.AlignCenter)
+        self.label = QLabel(self.person_page)
+        self.label.setObjectName(u"label")
+        self.label.setMinimumSize(QSize(96, 0))
+        self.label.setAlignment(Qt.AlignCenter)
+
+        self.formLayout.setWidget(0, QFormLayout.LabelRole, self.label)
+
+        self.label_2 = QLabel(self.person_page)
+        self.label_2.setObjectName(u"label_2")
+        self.label_2.setMinimumSize(QSize(96, 0))
+        self.label_2.setAlignment(Qt.AlignCenter)
+
+        self.formLayout.setWidget(1, QFormLayout.LabelRole, self.label_2)
+
+        self.label_3 = QLabel(self.person_page)
+        self.label_3.setObjectName(u"label_3")
+        self.label_3.setMinimumSize(QSize(96, 0))
+        self.label_3.setAlignment(Qt.AlignCenter)
+
+        self.formLayout.setWidget(2, QFormLayout.LabelRole, self.label_3)
+
+        self.label_4 = QLabel(self.person_page)
+        self.label_4.setObjectName(u"label_4")
+        self.label_4.setMinimumSize(QSize(96, 0))
+        self.label_4.setAlignment(Qt.AlignCenter)
+
+        self.formLayout.setWidget(3, QFormLayout.LabelRole, self.label_4)
+
+        self.lineEdit = QLineEdit(self.person_page)
+        self.lineEdit.setObjectName(u"lineEdit")
+
+        self.formLayout.setWidget(0, QFormLayout.FieldRole, self.lineEdit)
+
+        self.lineEdit_2 = QLineEdit(self.person_page)
+        self.lineEdit_2.setObjectName(u"lineEdit_2")
+
+        self.formLayout.setWidget(1, QFormLayout.FieldRole, self.lineEdit_2)
+
+        self.lineEdit_3 = QLineEdit(self.person_page)
+        self.lineEdit_3.setObjectName(u"lineEdit_3")
+
+        self.formLayout.setWidget(2, QFormLayout.FieldRole, self.lineEdit_3)
+
+        self.comboBox = QComboBox(self.person_page)
+        self.comboBox.addItem("")
+        self.comboBox.addItem("")
+        self.comboBox.setObjectName(u"comboBox")
+
+        self.formLayout.setWidget(3, QFormLayout.FieldRole, self.comboBox)
+
+
+        self.verticalLayout_2.addLayout(self.formLayout)
+
+        self.additional_data_stack.addWidget(self.person_page)
+        self.company_page = QWidget()
+        self.company_page.setObjectName(u"company_page")
+        self.verticalLayout_3 = QVBoxLayout(self.company_page)
+        self.verticalLayout_3.setObjectName(u"verticalLayout_3")
+        self.verticalLayout_3.setContentsMargins(0, 0, 0, 0)
+        self.formLayout_2 = QFormLayout()
+        self.formLayout_2.setObjectName(u"formLayout_2")
+        self.formLayout_2.setLabelAlignment(Qt.AlignCenter)
+        self.label_5 = QLabel(self.company_page)
+        self.label_5.setObjectName(u"label_5")
+        self.label_5.setMinimumSize(QSize(96, 0))
+        self.label_5.setAlignment(Qt.AlignCenter)
+
+        self.formLayout_2.setWidget(0, QFormLayout.LabelRole, self.label_5)
+
+        self.label_6 = QLabel(self.company_page)
+        self.label_6.setObjectName(u"label_6")
+        self.label_6.setMinimumSize(QSize(96, 0))
+        self.label_6.setAlignment(Qt.AlignCenter)
+
+        self.formLayout_2.setWidget(1, QFormLayout.LabelRole, self.label_6)
+
+        self.lineEdit_4 = QLineEdit(self.company_page)
+        self.lineEdit_4.setObjectName(u"lineEdit_4")
+
+        self.formLayout_2.setWidget(0, QFormLayout.FieldRole, self.lineEdit_4)
+
+        self.lineEdit_5 = QLineEdit(self.company_page)
+        self.lineEdit_5.setObjectName(u"lineEdit_5")
+
+        self.formLayout_2.setWidget(1, QFormLayout.FieldRole, self.lineEdit_5)
+
+
+        self.verticalLayout_3.addLayout(self.formLayout_2)
+
+        self.additional_data_stack.addWidget(self.company_page)
 
         self.verticalLayout.addWidget(self.additional_data_stack)
 
@@ -104,6 +212,12 @@ class Ui_ClientDialog(object):
 
 
         self.retranslateUi(ClientDialog)
+        self.create_button.clicked.connect(ClientDialog.accept)
+        self.cancel_button.clicked.connect(ClientDialog.reject)
+        self.selector_combo_box.currentIndexChanged.connect(self.additional_data_stack.setCurrentIndex)
+
+        self.additional_data_stack.setCurrentIndex(0)
+
 
         QMetaObject.connectSlotsByName(ClientDialog)
     # setupUi
@@ -111,9 +225,21 @@ class Ui_ClientDialog(object):
     def retranslateUi(self, ClientDialog):
         ClientDialog.setWindowTitle(QCoreApplication.translate("ClientDialog", u"Dialog", None))
         self.address_label.setText(QCoreApplication.translate("ClientDialog", u"Address", None))
+        self.selector_combo_box.setItemText(0, QCoreApplication.translate("ClientDialog", u"Person", None))
+        self.selector_combo_box.setItemText(1, QCoreApplication.translate("ClientDialog", u"Company", None))
+
         self.email_label.setText(QCoreApplication.translate("ClientDialog", u"E-mail", None))
         self.phone_label.setText(QCoreApplication.translate("ClientDialog", u"Phone number", None))
         self.selector_label.setText(QCoreApplication.translate("ClientDialog", u"Account type", None))
+        self.label.setText(QCoreApplication.translate("ClientDialog", u"Name", None))
+        self.label_2.setText(QCoreApplication.translate("ClientDialog", u"Surname", None))
+        self.label_3.setText(QCoreApplication.translate("ClientDialog", u"PESEL", None))
+        self.label_4.setText(QCoreApplication.translate("ClientDialog", u"Sex", None))
+        self.comboBox.setItemText(0, QCoreApplication.translate("ClientDialog", u"K", None))
+        self.comboBox.setItemText(1, QCoreApplication.translate("ClientDialog", u"M", None))
+
+        self.label_5.setText(QCoreApplication.translate("ClientDialog", u"Name", None))
+        self.label_6.setText(QCoreApplication.translate("ClientDialog", u"NIP", None))
         self.create_button.setText(QCoreApplication.translate("ClientDialog", u"Create", None))
         self.cancel_button.setText(QCoreApplication.translate("ClientDialog", u"Cancel", None))
     # retranslateUi
