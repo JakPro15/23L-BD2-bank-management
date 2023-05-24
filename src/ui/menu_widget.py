@@ -13,3 +13,5 @@ class MenuWidget(QWidget):
         self._ui.setupUi(self)
         self._ui.quit_button.clicked.connect(lambda: sys.exit(0))
         self.accounts_button_clicked = self._ui.accounts_button.clicked
+        self.clients_button_clicked = self._ui.clients_button.clicked
+        self.transactions_button_clicked = self._ui.transactions_button.clicked

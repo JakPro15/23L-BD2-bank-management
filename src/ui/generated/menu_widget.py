@@ -23,7 +23,6 @@ class Ui_MenuWidget(object):
         if not MenuWidget.objectName():
             MenuWidget.setObjectName(u"MenuWidget")
         MenuWidget.resize(800, 600)
-        MenuWidget.setMinimumSize(QSize(800, 600))
         self.horizontalLayout = QHBoxLayout(MenuWidget)
         self.horizontalLayout.setObjectName(u"horizontalLayout")
         self.left_spacer = QSpacerItem(301, 22, QSizePolicy.Expanding, QSizePolicy.Minimum)

@@ -15,21 +15,21 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QHBoxLayout, QHeaderView, QLabel,
-    QPushButton, QSizePolicy, QSpacerItem, QTableWidget,
-    QTableWidgetItem, QVBoxLayout, QWidget)
+from PySide6.QtWidgets import (QAbstractItemView, QAbstractScrollArea, QApplication, QHBoxLayout,
+    QHeaderView, QLabel, QPushButton, QSizePolicy,
+    QSpacerItem, QTableWidget, QTableWidgetItem, QVBoxLayout,
+    QWidget)
 
 class Ui_AccountsWidget(object):
     def setupUi(self, AccountsWidget):
         if not AccountsWidget.objectName():
             AccountsWidget.setObjectName(u"AccountsWidget")
         AccountsWidget.resize(800, 600)
-        AccountsWidget.setMinimumSize(QSize(800, 600))
         self.horizontalLayout = QHBoxLayout(AccountsWidget)
         self.horizontalLayout.setObjectName(u"horizontalLayout")
         self.account_list = QTableWidget(AccountsWidget)
-        if (self.account_list.columnCount() < 8):
-            self.account_list.setColumnCount(8)
+        if (self.account_list.columnCount() < 4):
+            self.account_list.setColumnCount(4)
         __qtablewidgetitem = QTableWidgetItem()
         self.account_list.setHorizontalHeaderItem(0, __qtablewidgetitem)
         __qtablewidgetitem1 = QTableWidgetItem()
@@ -39,7 +39,15 @@ class Ui_AccountsWidget(object):
         __qtablewidgetitem3 = QTableWidgetItem()
         self.account_list.setHorizontalHeaderItem(3, __qtablewidgetitem3)
         self.account_list.setObjectName(u"account_list")
-        self.account_list.setColumnCount(8)
+        self.account_list.setSizeAdjustPolicy(QAbstractScrollArea.AdjustToContents)
+        self.account_list.setAutoScroll(False)
+        self.account_list.setEditTriggers(QAbstractItemView.NoEditTriggers)
+        self.account_list.setTabKeyNavigation(False)
+        self.account_list.setAlternatingRowColors(True)
+        self.account_list.setSelectionMode(QAbstractItemView.SingleSelection)
+        self.account_list.setSelectionBehavior(QAbstractItemView.SelectRows)
+        self.account_list.setSortingEnabled(True)
+        self.account_list.setColumnCount(4)
         self.account_list.horizontalHeader().setVisible(True)
         self.account_list.horizontalHeader().setCascadingSectionResizes(False)
         self.account_list.horizontalHeader().setDefaultSectionSize(143)
