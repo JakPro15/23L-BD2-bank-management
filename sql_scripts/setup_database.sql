@@ -22,7 +22,9 @@ CREATE TABLE KLIENCI (
     plec CHAR(1),
     nazwa VARCHAR(50),
     NIP CHAR(12),
-    CONSTRAINT kontakt CHECK(numer_telefonu IS NOT NULL OR email IS NOT NULL),
+    CONSTRAINT kontakt CHECK(
+        numer_telefonu IS NOT NULL OR email IS NOT NULL
+    ),
     CONSTRAINT podtyp CHECK(
         (selektor = 'osoba'
             AND imie IS NOT NULL AND nazwisko IS NOT NULL AND PESEL IS NOT NULL AND plec IS NOT NULL
@@ -44,18 +46,15 @@ CREATE TABLE KONTA (
     ID_konta INT AUTO_INCREMENT PRIMARY KEY,
     numer_konta CHAR(26) NOT NULL UNIQUE,
     data_utworzenia DATE NOT NULL DEFAULT (CURRENT_DATE),
-    data_zakonczenia DATE,
+    data_zamkniecia DATE,
     limit_transakcji DECIMAL(40, 20),
     ID_typu_konta INT NOT NULL REFERENCES TYPY_KONTA(ID_typu_konta),
-    CONSTRAINT zamkniecie_po_otwarciu CHECK(data_zakonczenia IS NULL OR
-                                        data_zakonczenia >= data_utworzenia)
+    CONSTRAINT zamkniecie_po_otwarciu CHECK(data_zamkniecia >= data_utworzenia)
 );
 
 CREATE TABLE PRZYNALEZNOSCI_KONT (
-    ID_klienta INT NOT NULL,
-    ID_konta INT NOT NULL,
-    CONSTRAINT fk_przynaleznosci_kont_klienci FOREIGN KEY (ID_klienta) REFERENCES KLIENCI(ID_klienta),
-    CONSTRAINT fk_przynaleznosci_kont_konta FOREIGN KEY (ID_konta) REFERENCES KONTA(ID_konta),
+    ID_klienta INT NOT NULL REFERENCES KLIENCI(ID_klienta) ON DELETE CASCADE,
+    ID_konta INT NOT NULL REFERENCES KONTA(ID_konta) ON DELETE CASCADE,
     PRIMARY KEY (ID_klienta, ID_konta)
 );
 
@@ -79,7 +78,7 @@ CREATE TABLE SALDA (
     ID_konta INT NOT NULL REFERENCES KONTA(ID_konta),
     skrot_nazwy_waluty CHAR(3) NOT NULL REFERENCES WALUTY(skrot_nazwy_waluty),
     obecne_saldo DECIMAL(40, 20) NOT NULL,
-    CONSTRAINT salda_pk PRIMARY KEY (ID_konta, skrot_nazwy_waluty)
+    PRIMARY KEY (ID_konta, skrot_nazwy_waluty)
 );
 
 CREATE TABLE POZYCZKI (
@@ -104,9 +103,11 @@ CREATE TABLE LOKATY (
     oprocentowanie DECIMAL(5, 2) NOT NULL CHECK(oprocentowanie >= 0),
     ID_konta INT NOT NULL REFERENCES SALDA(ID_konta),
     skrot_nazwy_waluty CHAR(3) NOT NULL REFERENCES SALDA(skrot_nazwy_waluty),
-    CONSTRAINT kolejnosc_dat CHECK(data_konca_blokady >= data_zalozenia AND
-                                   data_zakonczenia >= data_konca_blokady AND
-                                   data_zakonczenia >= data_zalozenia)
+    CONSTRAINT kolejnosc_dat CHECK(
+        data_konca_blokady >= data_zalozenia AND
+        data_zakonczenia >= data_konca_blokady AND
+        data_zakonczenia >= data_zalozenia
+    )
 );
 
 CREATE TABLE BANKI (
@@ -135,8 +136,12 @@ CREATE TABLE TRANSAKCJE (
     skrot_nazwy_waluty_2 CHAR(3) REFERENCES SALDA(skrot_nazwy_waluty),
     ID_konta_zewnetrznego INT REFERENCES KONTA_ZEWNETRZNE(ID_konta_zewnetrznego),
     CONSTRAINT luk CHECK(
-        (ID_konta_2 IS NOT NULL AND skrot_nazwy_waluty_2 IS NOT NULL AND ID_konta_zewnetrznego IS NULL)
-        OR
-        (ID_konta_2 IS NULL AND skrot_nazwy_waluty_2 IS NULL AND ID_konta_zewnetrznego IS NOT NULL)
+        (ID_konta_2 IS NOT NULL AND skrot_nazwy_waluty_2 IS NOT NULL AND
+         ID_konta_zewnetrznego IS NULL) OR
+        (ID_konta_2 IS NULL AND skrot_nazwy_waluty_2 IS NULL AND
+         ID_konta_zewnetrznego IS NOT NULL)
+    ),
+    CONSTRAINT waluta_przelewu_zewnetrznego CHECK(
+        ID_konta_zewnetrznego IS NULL OR kwota_przed = kwota_po
     )
 );
