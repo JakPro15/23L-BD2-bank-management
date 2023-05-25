@@ -10,7 +10,3 @@ class DatabaseTransactionError(Exception):
 class NoneValueError(Exception):
     def __init__(self, *args: object) -> None:
         super().__init__(*args)
-
-class InvalidSelectorException(Exception):
-    def __init__(self, *args: object) -> None:
-        super().__init__(*args)

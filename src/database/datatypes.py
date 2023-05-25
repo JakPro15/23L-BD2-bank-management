@@ -2,11 +2,13 @@ import PySide6.QtSql as sql
 
 from abc import ABC
 from dataclasses import dataclass
+from typing import Type
 
-from database_errors import InvalidSelectorException
+class Data(ABC):
+    pass
 
 @dataclass
-class AddressData:
+class AddressData(Data):
     address_id: int | None = None
     country: str | None = None
     city: str | None = None
@@ -26,15 +28,9 @@ class AddressData:
             house_nr=query.value("numer_domu"),
             apartment_nr=query.value("numer_mieszkania")
         )
-    
-class Selector:
-    def __init__(self, type: str) -> None:
-        if(type not in ['osoba', 'firma']):
-            raise InvalidSelectorException
-        self.type = type
 
 @dataclass
-class ClientData(ABC):
+class ClientData(Data, ABC):
     client_id: int | None = None
     address: AddressData | None = None
     email: str | None = None
@@ -69,3 +65,17 @@ class CompanyData(ClientData):
     @property
     def selector(self) -> str:
         return "firma"
+
+name_mapping: dict[Type[Data] | str, str] = {
+    AddressData: "ADRESY",
+    PersonData: "KLIENCI",
+    CompanyData: "KLIENCI",
+    "email": "email",
+    "nr_tel": "numer_telefonu",
+    "first_name": "imie",
+    "last_name": "nazwisko",
+    "PESEL": "PESEL",
+    "sex": "plec",
+    "name": "nazwa",
+    "NIP": "NIP"
+}

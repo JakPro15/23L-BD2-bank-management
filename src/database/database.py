@@ -4,7 +4,13 @@ from os.path import expanduser
 import PySide6.QtSql as sql
 import re
 
-from datatypes import AddressData, ClientData, PersonData, CompanyData
+from datatypes import (
+    AddressData,
+    ClientData,
+    PersonData,
+    CompanyData,
+    name_mapping
+)
 from database_errors import DatabaseConnectionError, DatabaseTransactionError, NoneValueError
 
 class Database:
@@ -175,9 +181,28 @@ class Database:
             if not query.exec():
                 raise DatabaseTransactionError(
                     "Could not delete the client from the database"
-                )
+            )
+
+    def update_client(self, client: ClientData):
+        with self.transaction():
+            updates = ""
+            for attr in vars(client).keys():
+                if(vars(client)[attr] is not None) and (client.address is None) and (attr != "client_id"):
+                    updates += f"{name_mapping[attr]} = :{attr}, "
+            updates = updates[:-2]
+
+            query = self.create_query(client,
+                f"UPDATE KLIENCI "
+                f"SET {updates} "
+                "WHERE ID_klienta = :client_id"
+            )
+
+            if not query.exec():
+                raise DatabaseTransactionError(
+                    "Could not update the client in the database"
+            )
 
 
 if __name__ == "__main__":
     db = Database()
-    db.delete_client(27)
+    db.update_client(PersonData(client_id=26, first_name="Graweł", last_name="Xd"))
