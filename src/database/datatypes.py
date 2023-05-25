@@ -7,13 +7,13 @@ from database_errors import InvalidSelectorException
 
 @dataclass
 class AddressData:
+    address_id: int | None = None
     country: str | None = None
     city: str | None = None
     post_code: str | None = None
     street: str | None = None
     house_nr: str | None = None
     apartment_nr: str | None = None
-    address_id: int | None = None
 
     @classmethod
     def from_query(cls, query: sql.QSqlQuery):

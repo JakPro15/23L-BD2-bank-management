@@ -122,11 +122,15 @@ class Database:
                     "Could not insert the client into the database"
                 )
 
-    def show_client_data_people(self) -> list[PersonData]:
+    def show_client_data(self) -> tuple[list[PersonData], list[CompanyData]]:
         query = sql.QSqlQuery(self.connection)
         query.prepare(
-            "SELECT ID_klienta, ID_adresu, email, numer_telefonu, imie, nazwisko, PESEL, plec FROM KLIENCI "
-            "WHERE selektor = 'osoba'"
+            "SELECT "
+            "k.ID_klienta, a.ID_adresu, a.kraj, a.miejscowosc, "
+            "a.kod_pocztowy, a.ulica, a.numer_domu, a.numer_mieszkania, "
+            "k.email, k.numer_telefonu, k.imie, k.nazwisko, k.PESEL, k.plec, "
+            "k.nazwa, k.NIP, k.selektor "
+            "FROM KLIENCI k JOIN ADRESY a USING(ID_adresu)"
         )
 
         if not query.exec():
@@ -134,88 +138,39 @@ class Database:
                 "Could not collect specified client data"
             )
 
-        result: list[PersonData] = []
+        result: tuple[list[PersonData], list[CompanyData]] = ([], [])
         while query.next():
-            address_id: int = query.value("ID_adresu")
-
-            address_query = sql.QSqlQuery(self.connection)
-
-            address_query.prepare(
-                "SELECT ID_adresu, kraj, miejscowosc, kod_pocztowy, ulica, numer_domu, numer_mieszkania FROM ADRESY "
-                f"WHERE ID_adresu = {address_id}"
-            )
-
-            if not address_query.exec():
-                raise DatabaseTransactionError(
-                    "Could not collect specified address data"
-                )
-            
-            if address_query.next():
-                address = AddressData.from_query(address_query)
-
-                data = PersonData(
-                    client_id=query.value("ID_klienta"),
-                    address=address,
-                    email=query.value("email"),
-                    nr_tel=query.value("numer_telefonu"),
-                    first_name=query.value("imie"),
-                    last_name=query.value("nazwisko"),
-                    PESEL=query.value("PESEL"),
-                    sex=query.value("plec")
-                )
-                result.append(data)
-
-        return result
-    
-    def show_client_data_companies(self) -> list[CompanyData]:
-        query = sql.QSqlQuery(self.connection)
-        query.prepare(
-            "SELECT ID_klienta, ID_adresu, email, numer_telefonu, nazwa, NIP FROM KLIENCI "
-            "WHERE selektor = 'firma'"
-        )
-
-        if not query.exec():
-            raise DatabaseTransactionError(
-                "Could not collect specified client data"
-            )
-
-        result: list[CompanyData] = []
-        while query.next():
-            address_id: int = query.value("ID_adresu")
-
-            address_query = sql.QSqlQuery(self.connection)
-
-            address_query.prepare(
-                "SELECT ID_adresu, kraj, miejscowosc, kod_pocztowy, ulica, numer_domu, numer_mieszkania FROM ADRESY "
-                f"WHERE ID_adresu = {address_id}"
-            )
-
-            if not address_query.exec():
-                raise DatabaseTransactionError(
-                    "Could not collect specified address data"
-                )
-            
-            if address_query.next():
-                address = AddressData.from_query(address_query)
-
-                data = CompanyData(
-                    client_id=query.value("ID_klienta"),
-                    address=address,
-                    email=query.value("email"),
-                    nr_tel=query.value("numer_telefonu"),
-                    name=query.value("nazwa"),
-                    NIP=query.value("NIP")
-                )
-                result.append(data)
+                if(query.value("selektor") == 'osoba'):
+                    data = PersonData(
+                        client_id=query.value("ID_klienta"),
+                        address=AddressData.from_query(query),
+                        email=query.value("email"),
+                        nr_tel=query.value("numer_telefonu"),
+                        first_name=query.value("imie"),
+                        last_name=query.value("nazwisko"),
+                        PESEL=query.value("PESEL"),
+                        sex=query.value("plec")
+                    )
+                    result[0].append(data)
+                else:
+                    data = CompanyData(
+                        client_id=query.value("ID_klienta"),
+                        address=AddressData.from_query(query),
+                        email=query.value("email"),
+                        nr_tel=query.value("numer_telefonu"),
+                        name=query.value("nazwa"),
+                        NIP=query.value("NIP")
+                    )
+                    result[1].append(data)
 
         return result
 
-    def delete_client(self, id: int) -> None:
+    def delete_client(self, client_id: int) -> None:
         with self.transaction():
-            query = sql.QSqlQuery(self.connection)
-            query.prepare("DELETE FROM KLIENCI WHERE ID_klienta = :id")
-
-            query.bindValue(":id", id)
+            query = self.create_query(
+                PersonData(client_id=client_id),
+                "DELETE FROM KLIENCI WHERE ID_klienta = :client_id"
+            )
 
             if not query.exec():
                 raise DatabaseTransactionError(
@@ -225,3 +180,4 @@ class Database:
 
 if __name__ == "__main__":
     db = Database()
+    db.delete_client(27)
