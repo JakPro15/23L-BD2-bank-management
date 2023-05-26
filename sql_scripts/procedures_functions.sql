@@ -12,7 +12,10 @@ BEGIN
 
     IF NEW.ID_karty IS NOT NULL
     THEN
-        SET @v_typ_karty := (SELECT typ_karty FROM KARTY WHERE ID_karty = NEW.ID_karty);
+        SELECT typ_karty
+        FROM KARTY
+        WHERE ID_karty = NEW.ID_karty
+        INTO v_typ_karty;
 
         IF v_typ_karty = 'debit'
         THEN
