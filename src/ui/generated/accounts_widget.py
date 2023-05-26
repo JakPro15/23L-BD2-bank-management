@@ -54,6 +54,7 @@ class Ui_AccountsWidget(object):
         self.account_list.horizontalHeader().setHighlightSections(True)
         self.account_list.horizontalHeader().setProperty("showSortIndicator", True)
         self.account_list.horizontalHeader().setStretchLastSection(True)
+        self.account_list.verticalHeader().setVisible(False)
 
         self.horizontalLayout.addWidget(self.account_list)
 

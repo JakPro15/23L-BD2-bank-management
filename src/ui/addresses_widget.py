@@ -1,7 +1,8 @@
 from typing import Optional
 
-from PySide6.QtWidgets import QWidget
+from PySide6.QtWidgets import QTableWidgetItem, QWidget
 
+from src.database.datatypes import AddressData
 from src.ui.addresses_dialog import AddressesDialog
 
 # from src.ui.addresses_dialog import AddressDialog
@@ -22,3 +23,20 @@ class AddressesWidget(QWidget):
         result = self._address_dialog.exec()
         if result:
             pass
+
+    def insert_data(self, data: AddressData):
+        new_row = self._ui.addresses_list.rowCount()
+        self._ui.addresses_list.insertRow(new_row)
+        row_entry = [
+            str(data.address_id),
+            data.country,
+            data.city,
+            data.post_code,
+            data.street,
+            data.house_nr,
+            data.apartment_nr if data.apartment_nr is not None else "N/A",
+        ]
+        for id, value in enumerate(row_entry):
+            self._ui.addresses_list.setItem(
+                new_row, id, QTableWidgetItem(value)
+            )

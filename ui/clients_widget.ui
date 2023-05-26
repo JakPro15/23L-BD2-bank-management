@@ -56,9 +56,17 @@
          <attribute name="horizontalHeaderStretchLastSection">
           <bool>true</bool>
          </attribute>
+         <attribute name="verticalHeaderVisible">
+          <bool>false</bool>
+         </attribute>
          <column>
           <property name="text">
-           <string>Address</string>
+           <string>ID</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>Address ID</string>
           </property>
          </column>
          <column>
@@ -138,9 +146,17 @@
          <attribute name="horizontalHeaderStretchLastSection">
           <bool>true</bool>
          </attribute>
+         <attribute name="verticalHeaderVisible">
+          <bool>false</bool>
+         </attribute>
          <column>
           <property name="text">
-           <string>Address</string>
+           <string>ID</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>Address ID</string>
           </property>
          </column>
          <column>

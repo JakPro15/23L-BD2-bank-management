@@ -10,3 +10,7 @@ class AddressesDialog(QDialog):
         super().__init__(parent)
         self._ui = Ui_AddressDialog()
         self._ui.setupUi(self)
+        self._ui.create_button.clicked.connect(self._try_create_address)
+
+    def _try_create_address(self):
+        self.done(1)

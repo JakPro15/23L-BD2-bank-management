@@ -25,46 +25,7 @@
      <property name="labelAlignment">
       <set>Qt::AlignCenter</set>
      </property>
-     <item row="0" column="0">
-      <widget class="QLabel" name="address_label">
-       <property name="minimumSize">
-        <size>
-         <width>96</width>
-         <height>0</height>
-        </size>
-       </property>
-       <property name="text">
-        <string>Address</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignCenter</set>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="1">
-      <widget class="QLineEdit" name="address_line_edit"/>
-     </item>
-     <item row="1" column="1">
-      <widget class="QLineEdit" name="email_line_edit"/>
-     </item>
-     <item row="2" column="1">
-      <widget class="QLineEdit" name="phone_line_edit"/>
-     </item>
-     <item row="3" column="1">
-      <widget class="QComboBox" name="selector_combo_box">
-       <item>
-        <property name="text">
-         <string>Person</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>Company</string>
-        </property>
-       </item>
-      </widget>
-     </item>
-     <item row="1" column="0">
+     <item row="2" column="0">
       <widget class="QLabel" name="email_label">
        <property name="minimumSize">
         <size>
@@ -80,7 +41,10 @@
        </property>
       </widget>
      </item>
-     <item row="2" column="0">
+     <item row="2" column="1">
+      <widget class="QLineEdit" name="email_line_edit"/>
+     </item>
+     <item row="3" column="0">
       <widget class="QLabel" name="phone_label">
        <property name="minimumSize">
         <size>
@@ -96,7 +60,10 @@
        </property>
       </widget>
      </item>
-     <item row="3" column="0">
+     <item row="3" column="1">
+      <widget class="QLineEdit" name="phone_line_edit"/>
+     </item>
+     <item row="4" column="0">
       <widget class="QLabel" name="selector_label">
        <property name="minimumSize">
         <size>
@@ -106,6 +73,80 @@
        </property>
        <property name="text">
         <string>Account type</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="1">
+      <widget class="QComboBox" name="selector_combo_box">
+       <item>
+        <property name="text">
+         <string>Person</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Company</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <layout class="QHBoxLayout" name="address_section">
+       <item>
+        <widget class="QPushButton" name="address_button">
+         <property name="text">
+          <string>Choose address...</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="address_spacer">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <widget class="QLabel" name="id_label">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="text">
+          <string>ID:</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="id_value_label">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item row="1" column="0">
+      <widget class="QLabel" name="address_label">
+       <property name="minimumSize">
+        <size>
+         <width>96</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>Address</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignCenter</set>

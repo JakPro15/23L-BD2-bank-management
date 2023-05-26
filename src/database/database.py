@@ -3,12 +3,13 @@ from contextlib import contextmanager
 from os.path import expanduser
 
 import PySide6.QtSql as sql
-from database_errors import (
+
+from src.database.database_errors import (
     DatabaseConnectionError,
     DatabaseTransactionError,
     NoneValueError,
 )
-from datatypes import (
+from src.database.datatypes import (
     AddressData,
     ClientData,
     CompanyData,

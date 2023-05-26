@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'addresses_widget.ui'
+## Form generated from reading UI file 'address_choice_dialog.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.5.0
 ##
@@ -15,19 +15,19 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QAbstractItemView, QAbstractScrollArea, QApplication, QHBoxLayout,
-    QHeaderView, QLabel, QPushButton, QSizePolicy,
+from PySide6.QtWidgets import (QAbstractItemView, QAbstractScrollArea, QApplication, QDialog,
+    QHBoxLayout, QHeaderView, QPushButton, QSizePolicy,
     QSpacerItem, QTableWidget, QTableWidgetItem, QVBoxLayout,
     QWidget)
 
-class Ui_AddressesWidget(object):
-    def setupUi(self, AddressesWidget):
-        if not AddressesWidget.objectName():
-            AddressesWidget.setObjectName(u"AddressesWidget")
-        AddressesWidget.resize(800, 600)
-        self.horizontalLayout = QHBoxLayout(AddressesWidget)
-        self.horizontalLayout.setObjectName(u"horizontalLayout")
-        self.addresses_list = QTableWidget(AddressesWidget)
+class Ui_AddressChoiceDialog(object):
+    def setupUi(self, AddressChoiceDialog):
+        if not AddressChoiceDialog.objectName():
+            AddressChoiceDialog.setObjectName(u"AddressChoiceDialog")
+        AddressChoiceDialog.resize(600, 600)
+        self.verticalLayout = QVBoxLayout(AddressChoiceDialog)
+        self.verticalLayout.setObjectName(u"verticalLayout")
+        self.addresses_list = QTableWidget(AddressChoiceDialog)
         if (self.addresses_list.columnCount() < 7):
             self.addresses_list.setColumnCount(7)
         __qtablewidgetitem = QTableWidgetItem()
@@ -62,56 +62,57 @@ class Ui_AddressesWidget(object):
         self.addresses_list.horizontalHeader().setStretchLastSection(True)
         self.addresses_list.verticalHeader().setVisible(False)
 
-        self.horizontalLayout.addWidget(self.addresses_list)
+        self.verticalLayout.addWidget(self.addresses_list)
 
-        self.options_section = QVBoxLayout()
-        self.options_section.setObjectName(u"options_section")
-        self.options_label = QLabel(AddressesWidget)
-        self.options_label.setObjectName(u"options_label")
-        self.options_label.setMinimumSize(QSize(200, 0))
-        font = QFont()
-        font.setPointSize(12)
-        font.setBold(True)
-        self.options_label.setFont(font)
-        self.options_label.setAlignment(Qt.AlignCenter)
+        self.horizontalLayout = QHBoxLayout()
+        self.horizontalLayout.setObjectName(u"horizontalLayout")
+        self.add_button = QPushButton(AddressChoiceDialog)
+        self.add_button.setObjectName(u"add_button")
 
-        self.options_section.addWidget(self.options_label)
+        self.horizontalLayout.addWidget(self.add_button)
 
-        self.add_address_button = QPushButton(AddressesWidget)
-        self.add_address_button.setObjectName(u"add_address_button")
+        self.button_spacer = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
 
-        self.options_section.addWidget(self.add_address_button)
+        self.horizontalLayout.addItem(self.button_spacer)
 
-        self.options_spacer = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
+        self.select_button = QPushButton(AddressChoiceDialog)
+        self.select_button.setObjectName(u"select_button")
 
-        self.options_section.addItem(self.options_spacer)
+        self.horizontalLayout.addWidget(self.select_button)
 
+        self.cancel_button = QPushButton(AddressChoiceDialog)
+        self.cancel_button.setObjectName(u"cancel_button")
 
-        self.horizontalLayout.addLayout(self.options_section)
+        self.horizontalLayout.addWidget(self.cancel_button)
 
 
-        self.retranslateUi(AddressesWidget)
+        self.verticalLayout.addLayout(self.horizontalLayout)
 
-        QMetaObject.connectSlotsByName(AddressesWidget)
+
+        self.retranslateUi(AddressChoiceDialog)
+        self.cancel_button.clicked.connect(AddressChoiceDialog.reject)
+
+        QMetaObject.connectSlotsByName(AddressChoiceDialog)
     # setupUi
 
-    def retranslateUi(self, AddressesWidget):
-        AddressesWidget.setWindowTitle(QCoreApplication.translate("AddressesWidget", u"Form", None))
+    def retranslateUi(self, AddressChoiceDialog):
+        AddressChoiceDialog.setWindowTitle(QCoreApplication.translate("AddressChoiceDialog", u"Choose address...", None))
         ___qtablewidgetitem = self.addresses_list.horizontalHeaderItem(0)
-        ___qtablewidgetitem.setText(QCoreApplication.translate("AddressesWidget", u"ID", None));
+        ___qtablewidgetitem.setText(QCoreApplication.translate("AddressChoiceDialog", u"ID", None));
         ___qtablewidgetitem1 = self.addresses_list.horizontalHeaderItem(1)
-        ___qtablewidgetitem1.setText(QCoreApplication.translate("AddressesWidget", u"Country", None));
+        ___qtablewidgetitem1.setText(QCoreApplication.translate("AddressChoiceDialog", u"Country", None));
         ___qtablewidgetitem2 = self.addresses_list.horizontalHeaderItem(2)
-        ___qtablewidgetitem2.setText(QCoreApplication.translate("AddressesWidget", u"City", None));
+        ___qtablewidgetitem2.setText(QCoreApplication.translate("AddressChoiceDialog", u"City", None));
         ___qtablewidgetitem3 = self.addresses_list.horizontalHeaderItem(3)
-        ___qtablewidgetitem3.setText(QCoreApplication.translate("AddressesWidget", u"Postcode", None));
+        ___qtablewidgetitem3.setText(QCoreApplication.translate("AddressChoiceDialog", u"Postcode", None));
         ___qtablewidgetitem4 = self.addresses_list.horizontalHeaderItem(4)
-        ___qtablewidgetitem4.setText(QCoreApplication.translate("AddressesWidget", u"Street", None));
+        ___qtablewidgetitem4.setText(QCoreApplication.translate("AddressChoiceDialog", u"Street", None));
         ___qtablewidgetitem5 = self.addresses_list.horizontalHeaderItem(5)
-        ___qtablewidgetitem5.setText(QCoreApplication.translate("AddressesWidget", u"House number", None));
+        ___qtablewidgetitem5.setText(QCoreApplication.translate("AddressChoiceDialog", u"House number", None));
         ___qtablewidgetitem6 = self.addresses_list.horizontalHeaderItem(6)
-        ___qtablewidgetitem6.setText(QCoreApplication.translate("AddressesWidget", u"Apartment number", None));
-        self.options_label.setText(QCoreApplication.translate("AddressesWidget", u"Options", None))
-        self.add_address_button.setText(QCoreApplication.translate("AddressesWidget", u"Add address...", None))
+        ___qtablewidgetitem6.setText(QCoreApplication.translate("AddressChoiceDialog", u"Apartment number", None));
+        self.add_button.setText(QCoreApplication.translate("AddressChoiceDialog", u"Add address...", None))
+        self.select_button.setText(QCoreApplication.translate("AddressChoiceDialog", u"Select", None))
+        self.cancel_button.setText(QCoreApplication.translate("AddressChoiceDialog", u"Cancel", None))
     # retranslateUi
 
