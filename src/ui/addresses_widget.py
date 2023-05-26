@@ -23,10 +23,12 @@ class AddressesWidget(QWidget):
     def _add_address_procedure(self):
         result = self._address_dialog.exec()
         if result:
-            pass
+            self.clear_data()
+            self._load_database(self._database)
 
     def clear_data(self):
-        self._ui.addresses_list.clear()
+        while self._ui.addresses_list.rowCount() > 0:
+            self._ui.addresses_list.removeRow(0)
 
     def insert_data(self, data: AddressData):
         new_row = self._ui.addresses_list.rowCount()
@@ -47,6 +49,7 @@ class AddressesWidget(QWidget):
 
     def _load_database(self, database: Database):
         self._address_dialog._load_database(database)
+        self._database = database
         addresses = database.load_addresses()
         for address in addresses:
             self.insert_data(address)
