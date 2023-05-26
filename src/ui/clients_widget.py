@@ -5,7 +5,7 @@ from PySide6.QtWidgets import QTableWidgetItem, QWidget
 from src.database.database import Database
 from src.database.datatypes import CompanyData, PersonData
 from src.helpers import set_optional_str
-from src.ui.clients_dialog import ClientsDialog
+from src.ui.dialogs.clients_dialog import ClientsDialog
 from src.ui.generated.clients_widget import Ui_ClientsWidget
 
 

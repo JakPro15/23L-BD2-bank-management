@@ -2,7 +2,7 @@ from typing import Optional
 
 from PySide6.QtWidgets import QDialog, QWidget
 
-from src.ui.address_choice_dialog import AddressChoiceDialog
+from src.ui.dialogs.address_choice_dialog import AddressChoiceDialog
 from src.ui.generated.dialogs.client_dialog import Ui_ClientDialog
 
 

@@ -217,6 +217,18 @@ class Database:
                     "Could not update the client in the database"
                 )
 
+    def add_address(self, address: AddressData):
+        with self.transaction():
+            query = self.create_query(
+                address,
+                "INSERT INTO ADRESY (ID_adresu, kraj, miejscowosc, kod_pocztowy, ulica, numer_domu, numer_mieszkania) "
+                "VALUES (NULL, :country, :city, :post_code, :street, :house_nr, :apartment_nr)",
+            )
+            if not query.exec():
+                raise DatabaseTransactionError(
+                    "Could not insert the address into the database"
+                )
+
     def load_addresses(self) -> list[AddressData]:
         query = sql.QSqlQuery(self.connection)
         query.prepare("SELECT" "*" "FROM ADRESY")

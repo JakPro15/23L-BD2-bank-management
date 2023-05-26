@@ -4,7 +4,7 @@ from PySide6.QtWidgets import QTableWidgetItem, QWidget
 
 from src.database.database import Database
 from src.database.datatypes import AddressData
-from src.ui.addresses_dialog import AddressesDialog
+from src.ui.dialogs.addresses_dialog import AddressesDialog
 
 # from src.ui.addresses_dialog import AddressDialog
 from src.ui.generated.addresses_widget import Ui_AddressesWidget
@@ -25,6 +25,9 @@ class AddressesWidget(QWidget):
         if result:
             pass
 
+    def clear_data(self):
+        self._ui.addresses_list.clear()
+
     def insert_data(self, data: AddressData):
         new_row = self._ui.addresses_list.rowCount()
         self._ui.addresses_list.insertRow(new_row)
@@ -43,6 +46,7 @@ class AddressesWidget(QWidget):
             )
 
     def _load_database(self, database: Database):
+        self._address_dialog._load_database(database)
         addresses = database.load_addresses()
         for address in addresses:
             self.insert_data(address)

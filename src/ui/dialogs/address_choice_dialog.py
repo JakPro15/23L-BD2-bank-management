@@ -2,7 +2,8 @@ from typing import Optional
 
 from PySide6.QtWidgets import QDialog, QWidget
 
-from src.ui.addresses_dialog import AddressesDialog
+from src.database.database import Database
+from src.ui.dialogs.addresses_dialog import AddressesDialog
 from src.ui.generated.dialogs.address_choice_dialog import (
     Ui_AddressChoiceDialog,
 )
@@ -21,5 +22,5 @@ class AddressChoiceDialog(QDialog):
         if result:
             pass
 
-    def _load_database(self):
-        pass
+    def _load_database(self, database: Database):
+        self._address_dialog._load_database(database)
