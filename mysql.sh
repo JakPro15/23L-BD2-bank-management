@@ -15,7 +15,7 @@ check_running()
 case $1 in
 "")
     check_running
-    $mysql -u bd2-23L-z09 -p bd2-23L-z09;;
+    $mysql -u root bd2-23L-z09;;
 "start")
     if ! pgrep -x "mysqld" > /dev/null
     then
@@ -25,8 +25,8 @@ case $1 in
     fi;;
 "stop")
     check_running
-    $mysqladmin -u bd2-23L-z09 -p shutdown;;
+    $mysqladmin -u root shutdown;;
 *)
     check_running
-    $mysql -u bd2-23L-z09 -p bd2-23L-z09 < "$1";;
+    $mysql -u root bd2-23L-z09 < "$1";;
 esac

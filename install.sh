@@ -6,6 +6,10 @@ source shell_scripts/mysql_variables.sh
 
 if [ "$1" = "clean" ];
 then
+    if pgrep -x "mysqld" > /dev/null
+    then
+        $mysqladmin -u bd2-23L-z09 -pbd2 shutdown
+    fi
     rm -rf "$MYSQL_HOME/mysql" 2> /dev/null
     rm "$MYSQL_HOME/mysql_config.cnf" 2> /dev/null
     exit 0
