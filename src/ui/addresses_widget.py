@@ -2,6 +2,7 @@ from typing import Optional
 
 from PySide6.QtWidgets import QTableWidgetItem, QWidget
 
+from src.database.database import Database
 from src.database.datatypes import AddressData
 from src.ui.addresses_dialog import AddressesDialog
 
@@ -40,3 +41,8 @@ class AddressesWidget(QWidget):
             self._ui.addresses_list.setItem(
                 new_row, id, QTableWidgetItem(value)
             )
+
+    def _load_database(self, database: Database):
+        addresses = database.load_addresses()
+        for address in addresses:
+            self.insert_data(address)

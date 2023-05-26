@@ -31,3 +31,4 @@ class MainWindow(QMainWindow):
 
     def load_database(self, database: Database):
         self._clients_widget._load_database(database)
+        self._addresses_widget._load_database(database)

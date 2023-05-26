@@ -217,6 +217,19 @@ class Database:
                     "Could not update the client in the database"
                 )
 
+    def load_addresses(self) -> list[AddressData]:
+        query = sql.QSqlQuery(self.connection)
+        query.prepare("SELECT" "*" "FROM ADRESY")
+        if not query.exec():
+            raise DatabaseTransactionError(
+                "Could not collect specified address data"
+            )
+        result: list[AddressData] = []
+        while query.next():
+            data = AddressData.from_query(query)
+            result.append(data)
+        return result
+
 
 if __name__ == "__main__":
     db = Database()
