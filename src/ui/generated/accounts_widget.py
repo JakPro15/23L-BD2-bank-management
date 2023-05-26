@@ -81,13 +81,9 @@ class Ui_AccountsWidget(object):
 
         self.account_info_button = QPushButton(AccountsWidget)
         self.account_info_button.setObjectName(u"account_info_button")
+        self.account_info_button.setEnabled(False)
 
         self.options_section.addWidget(self.account_info_button)
-
-        self.menu_button = QPushButton(AccountsWidget)
-        self.menu_button.setObjectName(u"menu_button")
-
-        self.options_section.addWidget(self.menu_button)
 
 
         self.horizontalLayout.addLayout(self.options_section)
@@ -111,6 +107,5 @@ class Ui_AccountsWidget(object):
         self.options_label.setText(QCoreApplication.translate("AccountsWidget", u"Options", None))
         self.add_account_button.setText(QCoreApplication.translate("AccountsWidget", u"Add account...", None))
         self.account_info_button.setText(QCoreApplication.translate("AccountsWidget", u"Detailed account info...", None))
-        self.menu_button.setText(QCoreApplication.translate("AccountsWidget", u"Back to main menu", None))
     # retranslateUi
 

@@ -1,11 +1,13 @@
-import PySide6.QtSql as sql
-
 from abc import ABC
 from dataclasses import dataclass
 from typing import Type
 
+import PySide6.QtSql as sql
+
+
 class Data(ABC):
     pass
+
 
 @dataclass
 class AddressData(Data):
@@ -26,8 +28,9 @@ class AddressData(Data):
             post_code=query.value("kod_pocztowy"),
             street=query.value("ulica"),
             house_nr=query.value("numer_domu"),
-            apartment_nr=query.value("numer_mieszkania")
+            apartment_nr=query.value("numer_mieszkania"),
         )
+
 
 @dataclass
 class ClientData(Data, ABC):
@@ -40,11 +43,11 @@ class ClientData(Data, ABC):
     def address_id(self) -> int | None:
         if self.address is not None:
             return self.address.address_id
-        
+
     @property
     def selector(self) -> str:
         return ""
-        
+
 
 @dataclass
 class PersonData(ClientData):
@@ -56,15 +59,17 @@ class PersonData(ClientData):
     @property
     def selector(self) -> str:
         return "osoba"
-    
+
+
 @dataclass
 class CompanyData(ClientData):
     name: str | None = None
     NIP: str | None = None
-    
+
     @property
     def selector(self) -> str:
         return "firma"
+
 
 name_mapping: dict[Type[Data] | str, str] = {
     AddressData: "ADRESY",
@@ -77,5 +82,5 @@ name_mapping: dict[Type[Data] | str, str] = {
     "PESEL": "PESEL",
     "sex": "plec",
     "name": "nazwa",
-    "NIP": "NIP"
+    "NIP": "NIP",
 }

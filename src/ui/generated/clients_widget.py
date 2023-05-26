@@ -33,6 +33,7 @@ class Ui_ClientsWidget(object):
         self.people_page.setObjectName(u"people_page")
         self.verticalLayout = QVBoxLayout(self.people_page)
         self.verticalLayout.setObjectName(u"verticalLayout")
+        self.verticalLayout.setContentsMargins(0, 0, 0, 0)
         self.people_table = QTableWidget(self.people_page)
         if (self.people_table.columnCount() < 7):
             self.people_table.setColumnCount(7)
@@ -57,6 +58,7 @@ class Ui_ClientsWidget(object):
         self.people_table.setAlternatingRowColors(True)
         self.people_table.setSelectionMode(QAbstractItemView.SingleSelection)
         self.people_table.setSelectionBehavior(QAbstractItemView.SelectRows)
+        self.people_table.horizontalHeader().setStretchLastSection(True)
 
         self.verticalLayout.addWidget(self.people_table)
 
@@ -65,6 +67,7 @@ class Ui_ClientsWidget(object):
         self.companies_page.setObjectName(u"companies_page")
         self.verticalLayout_2 = QVBoxLayout(self.companies_page)
         self.verticalLayout_2.setObjectName(u"verticalLayout_2")
+        self.verticalLayout_2.setContentsMargins(0, 0, 0, 0)
         self.companies_table = QTableWidget(self.companies_page)
         if (self.companies_table.columnCount() < 5):
             self.companies_table.setColumnCount(5)
@@ -141,11 +144,6 @@ class Ui_ClientsWidget(object):
 
         self.options_section.addWidget(self.account_info_button)
 
-        self.menu_button = QPushButton(ClientsWidget)
-        self.menu_button.setObjectName(u"menu_button")
-
-        self.options_section.addWidget(self.menu_button)
-
 
         self.horizontalLayout.addLayout(self.options_section)
 
@@ -192,6 +190,5 @@ class Ui_ClientsWidget(object):
         self.options_label.setText(QCoreApplication.translate("ClientsWidget", u"Options", None))
         self.add_account_button.setText(QCoreApplication.translate("ClientsWidget", u"Add client...", None))
         self.account_info_button.setText(QCoreApplication.translate("ClientsWidget", u"Detailed client info...", None))
-        self.menu_button.setText(QCoreApplication.translate("ClientsWidget", u"Back to main menu", None))
     # retranslateUi
 

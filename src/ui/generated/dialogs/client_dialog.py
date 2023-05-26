@@ -212,7 +212,6 @@ class Ui_ClientDialog(object):
 
 
         self.retranslateUi(ClientDialog)
-        self.create_button.clicked.connect(ClientDialog.accept)
         self.cancel_button.clicked.connect(ClientDialog.reject)
         self.selector_combo_box.currentIndexChanged.connect(self.additional_data_stack.setCurrentIndex)
 
@@ -223,7 +222,7 @@ class Ui_ClientDialog(object):
     # setupUi
 
     def retranslateUi(self, ClientDialog):
-        ClientDialog.setWindowTitle(QCoreApplication.translate("ClientDialog", u"Dialog", None))
+        ClientDialog.setWindowTitle(QCoreApplication.translate("ClientDialog", u"Add client...", None))
         self.address_label.setText(QCoreApplication.translate("ClientDialog", u"Address", None))
         self.selector_combo_box.setItemText(0, QCoreApplication.translate("ClientDialog", u"Person", None))
         self.selector_combo_box.setItemText(1, QCoreApplication.translate("ClientDialog", u"Company", None))

@@ -17,7 +17,7 @@
    </sizepolicy>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>Add client...</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
@@ -327,22 +327,6 @@
  </widget>
  <resources/>
  <connections>
-  <connection>
-   <sender>create_button</sender>
-   <signal>clicked()</signal>
-   <receiver>ClientDialog</receiver>
-   <slot>accept()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>282</x>
-     <y>284</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>399</x>
-     <y>299</y>
-    </hint>
-   </hints>
-  </connection>
   <connection>
    <sender>cancel_button</sender>
    <signal>clicked()</signal>

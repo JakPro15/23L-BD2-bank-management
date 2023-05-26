@@ -11,7 +11,6 @@ class ClientsWidget(QWidget):
         super().__init__(parent)
         self._ui = Ui_ClientsWidget()
         self._ui.setupUi(self)
-        self.menu_button_clicked = self._ui.menu_button.clicked
         self._client_dialog = ClientsDialog(self)
         self._ui.add_account_button.clicked.connect(self._add_client_procedure)
 

@@ -16,7 +16,7 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QApplication, QHBoxLayout, QMainWindow, QSizePolicy,
-    QStackedWidget, QWidget)
+    QTabWidget, QWidget)
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -28,22 +28,20 @@ class Ui_MainWindow(object):
         self.centralwidget.setObjectName(u"centralwidget")
         self.horizontalLayout = QHBoxLayout(self.centralwidget)
         self.horizontalLayout.setObjectName(u"horizontalLayout")
-        self.main_stack = QStackedWidget(self.centralwidget)
-        self.main_stack.setObjectName(u"main_stack")
+        self.horizontalLayout.setContentsMargins(0, 0, 0, 0)
+        self.main_tabs = QTabWidget(self.centralwidget)
+        self.main_tabs.setObjectName(u"main_tabs")
 
-        self.horizontalLayout.addWidget(self.main_stack)
+        self.horizontalLayout.addWidget(self.main_tabs)
 
         MainWindow.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(MainWindow)
 
-        self.main_stack.setCurrentIndex(-1)
-
-
         QMetaObject.connectSlotsByName(MainWindow)
     # setupUi
 
     def retranslateUi(self, MainWindow):
-        MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"main_window", None))
+        MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"Bank app", None))
     # retranslateUi
 

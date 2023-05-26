@@ -11,7 +11,6 @@ class AccountsWidget(QWidget):
         super().__init__(parent)
         self._ui = Ui_AccountsWidget()
         self._ui.setupUi(self)
-        self.menu_button_clicked = self._ui.menu_button.clicked
         # self.insert_data(12345, dt.date.today(), dt.date.today(), 100000)
         # self.insert_data(
         #     23456,

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>AccountsWidget</class>
- <widget class="QWidget" name="AccountsWidget">
+ <class>AddressesWidget</class>
+ <widget class="QWidget" name="AddressesWidget">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -15,7 +15,7 @@
   </property>
   <layout class="QHBoxLayout" name="horizontalLayout">
    <item>
-    <widget class="QTableWidget" name="account_list">
+    <widget class="QTableWidget" name="addresses_list">
      <property name="sizeAdjustPolicy">
       <enum>QAbstractScrollArea::AdjustToContents</enum>
      </property>
@@ -41,7 +41,7 @@
       <bool>true</bool>
      </property>
      <property name="columnCount">
-      <number>4</number>
+      <number>6</number>
      </property>
      <attribute name="horizontalHeaderVisible">
       <bool>true</bool>
@@ -63,22 +63,32 @@
      </attribute>
      <column>
       <property name="text">
-       <string>Account number</string>
+       <string>Country</string>
       </property>
      </column>
      <column>
       <property name="text">
-       <string>Creation date</string>
+       <string>City</string>
       </property>
      </column>
      <column>
       <property name="text">
-       <string>Expiration date</string>
+       <string>Postcode</string>
       </property>
      </column>
      <column>
       <property name="text">
-       <string>Transaction limit</string>
+       <string>Street</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>House number</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Apartment number</string>
       </property>
      </column>
     </widget>
@@ -109,9 +119,9 @@
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="add_account_button">
+      <widget class="QPushButton" name="add_address_button">
        <property name="text">
-        <string>Add account...</string>
+        <string>Add address...</string>
        </property>
       </widget>
      </item>
@@ -127,16 +137,6 @@
         </size>
        </property>
       </spacer>
-     </item>
-     <item>
-      <widget class="QPushButton" name="account_info_button">
-       <property name="enabled">
-        <bool>false</bool>
-       </property>
-       <property name="text">
-        <string>Detailed account info...</string>
-       </property>
-      </widget>
      </item>
     </layout>
    </item>
