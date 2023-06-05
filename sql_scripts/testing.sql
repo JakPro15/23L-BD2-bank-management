@@ -11,6 +11,26 @@ UPDATE POZYCZKI SET ID_karty = 2 WHERE ID_pozyczki = 2;
 -- nie przechodzi, próba zaktualizowania pożyczki na kartę debetową
 
 
+-- Poniżej jest demonstracja działania procedury wez_pozyczke.
+-- Stan konta sprzed wzięcia pożyczki:
+SELECT ID_konta, skrot_nazwy_waluty, obecne_saldo
+FROM SALDA
+WHERE ID_konta = 10;
+
+CALL wez_pozyczke(10000, '2025-04-06', 7 / 100, 10, 'PLN');
+
+-- Ilość pieniędzy na koncie wzrosła.
+SELECT ID_konta, skrot_nazwy_waluty, obecne_saldo
+FROM SALDA
+WHERE ID_konta = 10;
+
+-- Pożyczka została też dodana do tabeli POZYCZKI.
+SELECT *
+FROM POZYCZKI
+ORDER BY data_wziecia DESC
+LIMIT 1;
+
+
 -- Zapytanie demonstruje działanie funkcji policz_calkowite_saldo.
 -- Pokazuje ilość pieniędzy na wszystkich kontach, pożyczkach i lokatach każdego z klientów.
 SELECT ID_klienta, 'konto' as typ, skrot_nazwy_waluty AS waluta, obecne_saldo,

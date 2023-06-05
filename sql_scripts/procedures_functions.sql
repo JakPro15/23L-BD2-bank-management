@@ -38,6 +38,32 @@ BEGIN
 END//
 
 
+-- Procedura rejestruje wzięcie pożyczki przez podane konto i dodaje pieniądze do konta.
+CREATE PROCEDURE wez_pozyczke(IN p_poczatkowa_kwota DECIMAL(40,20), IN p_termin_splaty DATE,
+                                      IN p_oprocentowanie DECIMAL(5,2), IN p_ID_konta INT,
+                                      IN p_skrot_nazwy_waluty CHAR(3))
+BEGIN
+    DECLARE v_ID_konta INT;
+    DECLARE v_skrot_nazwy_waluty CHAR(3);
+
+    SELECT ID_konta, skrot_nazwy_waluty
+    INTO v_ID_konta, v_skrot_nazwy_waluty
+    FROM SALDA
+    WHERE ID_konta = p_ID_konta AND skrot_nazwy_waluty = p_skrot_nazwy_waluty;
+
+    UPDATE SALDA
+    SET obecne_saldo = obecne_saldo + p_poczatkowa_kwota
+    WHERE ID_konta = v_ID_konta AND skrot_nazwy_waluty = v_skrot_nazwy_waluty;
+
+    INSERT INTO POZYCZKI VALUES (
+        NULL, p_poczatkowa_kwota, p_poczatkowa_kwota, (CURRENT_DATE), p_termin_splaty,
+        p_oprocentowanie, v_ID_konta, v_skrot_nazwy_waluty, NULL
+    );
+
+    -- TODO - obsługa sytuacji, w której chcemy wziąć pożyczkę na konto z niezarejestrowaną walutą
+END//
+
+
 -- Funkcja oblicza ogólne saldo w PLN wszystkich kont klienta, wliczając pożyczki i lokaty.
 CREATE FUNCTION policz_calkowite_saldo(p_ID_klienta INT)
 RETURNS DECIMAL
@@ -89,4 +115,4 @@ BEGIN
     END IF;
 
     RETURN v_balans_calkowity + v_suma_lokat - v_suma_pozyczek;
-END;
+END//
