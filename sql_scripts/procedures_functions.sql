@@ -38,6 +38,49 @@ BEGIN
 END//
 
 
+-- Wyzwalacz weryfikuje, czy data wzięcia branej pożyczki jest między założeniem, a zamknięciem konta.
+CREATE TRIGGER data_pozyczki_trig
+BEFORE UPDATE ON POZYCZKI
+FOR EACH ROW
+BEGIN
+    DECLARE v_data_utworzenia_konta DATE;
+    DECLARE v_data_zamkniecia_konta DATE;
+
+    SELECT data_utworzenia, data_zamkniecia
+    INTO v_data_utworzenia_konta, v_data_zamkniecia_konta
+    FROM KONTA
+    INNER JOIN SALDA USING(ID_konta)
+    WHERE ID_konta = NEW.ID_konta AND skrot_nazwy_waluty = NEW.skrot_nazwy_waluty;
+
+    IF NEW.data_wziecia < v_data_utworzenia_konta OR NEW.data_wziecia > v_data_zamkniecia_konta
+    THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'To konto nie istniało w momencie wzięcia pożyczki!';
+    END IF;
+END//
+
+
+-- Wyzwalacz weryfikuje, czy daty wzięcia i zakończenia tworzonej lokaty są między założeniem, a zamknięciem konta.
+CREATE TRIGGER data_lokaty_trig
+BEFORE UPDATE ON LOKATY
+FOR EACH ROW
+BEGIN
+    DECLARE v_data_utworzenia_konta DATE;
+    DECLARE v_data_zamkniecia_konta DATE;
+
+    SELECT data_utworzenia, data_zamkniecia
+    INTO v_data_utworzenia_konta, v_data_zamkniecia_konta
+    FROM KONTA
+    INNER JOIN SALDA USING(ID_konta)
+    WHERE ID_konta = NEW.ID_konta AND skrot_nazwy_waluty = NEW.skrot_nazwy_waluty;
+
+    IF NEW.data_zalozenia < v_data_utworzenia_konta OR NEW.data_zalozenia > v_data_zamkniecia_konta OR
+       NEW.data_zakonczenia < v_data_utworzenia_konta OR NEW.data_zakonczenia > v_data_zamkniecia_konta
+    THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'To konto nie istniało w momencie stworzenia lub zakończenia lokaty!';
+    END IF;
+END//
+
+
 -- Procedura rejestruje wzięcie pożyczki przez podane konto i dodaje pieniądze do konta.
 CREATE PROCEDURE wez_pozyczke(IN p_poczatkowa_kwota DECIMAL(40, 20), IN p_termin_splaty DATE,
                                         IN p_oprocentowanie DECIMAL(5, 2), IN p_ID_konta INT,

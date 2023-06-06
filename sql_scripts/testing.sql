@@ -11,6 +11,16 @@ UPDATE POZYCZKI SET ID_karty = 2 WHERE ID_pozyczki = 2;
 -- nie przechodzi, próba zaktualizowania pożyczki na kartę debetową
 
 
+-- data_pozyczki_trig
+UPDATE POZYCZKI SET data_wziecia = '1955-01-01' WHERE ID_pozyczki = 1;
+-- nie przechodzi, próba zaktualizowania daty wzięcia pożyczki na odległą datę
+
+
+-- data_lokaty_trig
+UPDATE LOKATY SET data_zalozenia = '1955-01-01' WHERE ID_lokaty = 1;
+-- nie przechodzi, próba zaktualizowania daty założenia lokaty na odległą datę
+
+
 -- Poniżej jest demonstracja działania procedury wez_pozyczke.
 -- Stan konta sprzed wzięcia pożyczki:
 SELECT ID_konta, skrot_nazwy_waluty, obecne_saldo
