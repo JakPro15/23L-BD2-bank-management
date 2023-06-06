@@ -31,6 +31,26 @@ ORDER BY data_wziecia DESC
 LIMIT 1;
 
 
+-- Poniżej jest demonstracja działania procedury zaloz_lokate.
+-- Stan konta sprzed założenia lokaty:
+SELECT ID_konta, skrot_nazwy_waluty, obecne_saldo
+FROM SALDA
+WHERE ID_konta = 10;
+
+CALL zaloz_lokate(3000, '2025-05-05', 3 / 100, 10, 'PLN');
+
+-- Tlość pieniędzy na koncie zmalała.
+SELECT ID_konta, skrot_nazwy_waluty, obecne_saldo
+FROM SALDA
+WHERE ID_konta = 10;
+
+-- Lokata została też dodana do tabeli LOKATY.
+SELECT *
+FROM LOKATY
+ORDER BY data_zalozenia DESC
+LIMIT 1;
+
+
 -- Zapytanie demonstruje działanie funkcji policz_calkowite_saldo.
 -- Pokazuje ilość pieniędzy na wszystkich kontach, pożyczkach i lokatach każdego z klientów.
 SELECT ID_klienta, 'konto' as typ, skrot_nazwy_waluty AS waluta, obecne_saldo,

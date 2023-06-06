@@ -39,8 +39,8 @@ END//
 
 
 -- Procedura rejestruje wzięcie pożyczki przez podane konto i dodaje pieniądze do konta.
-CREATE PROCEDURE wez_pozyczke(IN p_poczatkowa_kwota DECIMAL(40,20), IN p_termin_splaty DATE,
-                                      IN p_oprocentowanie DECIMAL(5,2), IN p_ID_konta INT,
+CREATE PROCEDURE wez_pozyczke(IN p_poczatkowa_kwota DECIMAL(40, 20), IN p_termin_splaty DATE,
+                                      IN p_oprocentowanie DECIMAL(5, 2), IN p_ID_konta INT,
                                       IN p_skrot_nazwy_waluty CHAR(3))
 BEGIN
     DECLARE v_ID_konta INT;
@@ -61,6 +61,37 @@ BEGIN
     );
 
     -- TODO - obsługa sytuacji, w której chcemy wziąć pożyczkę na konto z niezarejestrowaną walutą
+    -- TODO - obsłużyć wzięcie pożyczki na kartę kredytową
+END//
+
+
+-- Procedura rejestruje założenie lokaty przez podane konto i odejmuje pieniądze z konta.
+CREATE PROCEDURE zaloz_lokate(IN p_kwota DECIMAL(40, 20), IN p_data_konca_blokady DATE,
+                                            IN p_oprocentowanie DECIMAL(5, 2), IN p_ID_konta INT,
+                                            IN p_skrot_nazwy_waluty CHAR(3))
+BEGIN
+    DECLARE v_ID_konta INT;
+    DECLARE v_skrot_nazwy_waluty CHAR(3);
+    DECLARE v_obecne_saldo DECIMAL(40, 20);
+
+    SELECT ID_konta, skrot_nazwy_waluty, obecne_saldo
+    INTO v_ID_konta, v_skrot_nazwy_waluty, v_obecne_saldo
+    FROM SALDA
+    WHERE ID_konta = p_ID_konta AND skrot_nazwy_waluty = p_skrot_nazwy_waluty;
+
+    IF v_obecne_saldo >= p_kwota
+    THEN
+        UPDATE SALDA
+        SET obecne_saldo = obecne_saldo - p_kwota
+        WHERE ID_konta = v_ID_konta AND skrot_nazwy_waluty = v_skrot_nazwy_waluty;
+
+        INSERT INTO LOKATY VALUES (
+            NULL, p_kwota, (CURRENT_DATE), NULL, p_data_konca_blokady, p_oprocentowanie,
+            v_ID_konta, v_skrot_nazwy_waluty
+        );
+    ELSE
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Tego konta nie stać na założenie takiej lokaty!';
+    END IF;
 END//
 
 
