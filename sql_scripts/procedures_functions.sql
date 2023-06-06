@@ -40,8 +40,8 @@ END//
 
 -- Procedura rejestruje wzięcie pożyczki przez podane konto i dodaje pieniądze do konta.
 CREATE PROCEDURE wez_pozyczke(IN p_poczatkowa_kwota DECIMAL(40, 20), IN p_termin_splaty DATE,
-                                      IN p_oprocentowanie DECIMAL(5, 2), IN p_ID_konta INT,
-                                      IN p_skrot_nazwy_waluty CHAR(3))
+                                        IN p_oprocentowanie DECIMAL(5, 2), IN p_ID_konta INT,
+                                        IN p_skrot_nazwy_waluty CHAR(3))
 BEGIN
     DECLARE v_ID_konta INT;
     DECLARE v_skrot_nazwy_waluty CHAR(3);
@@ -65,10 +65,51 @@ BEGIN
 END//
 
 
+-- Procedura rejestruje spłatę pożyczki przez podane konto i odejmuje pieniądze z konta.
+CREATE PROCEDURE splac_pozyczke(IN p_kwota_splaty DECIMAL(40, 20), IN p_ID_pozyczki INT)
+BEGIN
+    DECLARE v_do_splaty DECIMAL(40, 20);
+    DECLARE v_ID_konta INT;
+    DECLARE v_skrot_nazwy_waluty CHAR(3);
+    DECLARE v_obecne_saldo DECIMAL(40, 20);
+    DECLARE v_kwota_splaty DECIMAL(40, 20);
+
+    SELECT do_splaty, ID_konta, skrot_nazwy_waluty
+    INTO v_do_splaty, v_ID_konta, v_skrot_nazwy_waluty
+    FROM POZYCZKI
+    WHERE ID_pozyczki = p_ID_pozyczki;
+
+    IF v_do_splaty > 0
+    THEN
+        SELECT obecne_saldo
+        INTO v_obecne_saldo
+        FROM SALDA
+        WHERE ID_konta = v_ID_konta AND skrot_nazwy_waluty = v_skrot_nazwy_waluty;
+
+        IF p_kwota_splaty > v_obecne_saldo OR p_kwota_splaty > v_do_splaty
+        THEN
+            SET v_kwota_splaty = LEAST(v_obecne_saldo, v_do_splaty);
+        ELSE
+            SET v_kwota_splaty = p_kwota_splaty;
+        END IF;
+
+        UPDATE SALDA
+        SET obecne_saldo = obecne_saldo - v_kwota_splaty
+        WHERE ID_konta = v_ID_konta AND skrot_nazwy_waluty = v_skrot_nazwy_waluty;
+
+        UPDATE POZYCZKI
+        SET do_splaty = do_splaty - v_kwota_splaty
+        WHERE ID_pozyczki = p_ID_pozyczki;
+    ELSE
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Ta pożyczka została już opłacona!';
+    END IF;
+END//
+
+
 -- Procedura rejestruje założenie lokaty przez podane konto i odejmuje pieniądze z konta.
 CREATE PROCEDURE zaloz_lokate(IN p_kwota DECIMAL(40, 20), IN p_data_konca_blokady DATE,
-                                            IN p_oprocentowanie DECIMAL(5, 2), IN p_ID_konta INT,
-                                            IN p_skrot_nazwy_waluty CHAR(3))
+                                    IN p_oprocentowanie DECIMAL(5, 2), IN p_ID_konta INT,
+                                    IN p_skrot_nazwy_waluty CHAR(3))
 BEGIN
     DECLARE v_ID_konta INT;
     DECLARE v_skrot_nazwy_waluty CHAR(3);

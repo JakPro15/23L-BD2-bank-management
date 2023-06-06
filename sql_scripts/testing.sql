@@ -17,6 +17,7 @@ SELECT ID_konta, skrot_nazwy_waluty, obecne_saldo
 FROM SALDA
 WHERE ID_konta = 10;
 
+-- Bierzemy pożyczkę:
 CALL wez_pozyczke(10000, '2025-04-06', 7 / 100, 10, 'PLN');
 
 -- Ilość pieniędzy na koncie wzrosła.
@@ -31,12 +32,30 @@ ORDER BY data_wziecia DESC
 LIMIT 1;
 
 
+-- Poniżej jest demonstracja działania procedury splac_pozyczke.
+-- Stan konta i zadłużenie przed spłatą pożyczki:
+SELECT s.ID_konta, s.skrot_nazwy_waluty, s.obecne_saldo, p.do_splaty
+FROM SALDA s
+INNER JOIN POZYCZKI p USING(ID_konta, skrot_nazwy_waluty)
+WHERE p.ID_pozyczki = 3;
+
+-- Spłacamy pożyczkę:
+CALL splac_pozyczke(1400, 3);
+
+-- Pożyczka została opłacona, a kwota została odjęta z salda:
+SELECT s.ID_konta, s.skrot_nazwy_waluty, s.obecne_saldo, p.do_splaty
+FROM SALDA s
+INNER JOIN POZYCZKI p USING(ID_konta, skrot_nazwy_waluty)
+WHERE p.ID_pozyczki = 3;
+
+
 -- Poniżej jest demonstracja działania procedury zaloz_lokate.
 -- Stan konta sprzed założenia lokaty:
 SELECT ID_konta, skrot_nazwy_waluty, obecne_saldo
 FROM SALDA
 WHERE ID_konta = 10;
 
+-- Zakładamy lokatę:
 CALL zaloz_lokate(3000, '2025-05-05', 3 / 100, 10, 'PLN');
 
 -- Tlość pieniędzy na koncie zmalała.
