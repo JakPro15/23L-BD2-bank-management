@@ -235,6 +235,41 @@ BEGIN
 END//
 
 
+-- Funkcja oblicza miesięczną opłatę za karty płatnicze dla danego klienta.
+CREATE FUNCTION policz_oplate_za_karty_platnicze(p_ID_klienta INT)
+RETURNS DECIMAL
+DETERMINISTIC
+BEGIN
+    DECLARE c_oplata_karty_debetowej DECIMAL(40, 20) DEFAULT 5;
+    DECLARE c_oplata_karty_kredytowej DECIMAL(40, 20) DEFAULT 10;
+    DECLARE v_liczba_kart_debetowych INT;
+    DECLARE v_liczba_kart_kredytowych INT;
+
+    SELECT COUNT(*)
+    INTO v_liczba_kart_debetowych
+    FROM KLIENCI
+    LEFT JOIN PRZYNALEZNOSCI_KONT USING(ID_klienta)
+    LEFT JOIN KONTA USING(ID_konta)
+    LEFT JOIN KARTY k USING(ID_konta)
+    WHERE ID_klienta = p_ID_klienta AND k.typ_karty = 'debit' AND
+          (k.data_wygasniecia > (CURRENT_DATE) OR k.data_wygasniecia IS NULL)
+          AND k.zablokowana = 0;
+
+    SELECT COUNT(*)
+    INTO v_liczba_kart_kredytowych
+    FROM KLIENCI
+    LEFT JOIN PRZYNALEZNOSCI_KONT USING(ID_klienta)
+    LEFT JOIN KONTA USING(ID_konta)
+    LEFT JOIN KARTY k USING(ID_konta)
+    WHERE ID_klienta = p_ID_klienta AND k.typ_karty = 'credit' AND
+          (k.data_wygasniecia > (CURRENT_DATE) OR k.data_wygasniecia IS NULL)
+          AND k.zablokowana = 0;
+
+    RETURN v_liczba_kart_debetowych * c_oplata_karty_debetowej
+            + v_liczba_kart_kredytowych * c_oplata_karty_kredytowej;
+END//
+
+
 -- Funkcja oblicza termin spłaty najbliższej pożyczki wziętej przez klienta
 CREATE FUNCTION policz_najblizszy_termin_splaty(p_ID_klienta INT)
 RETURNS INT

@@ -124,9 +124,35 @@ INNER JOIN SALDA USING(ID_konta)
 INNER JOIN LOKATY USING(ID_konta, skrot_nazwy_waluty);
 
 
+-- Zapytanie demonstruje działanie funkcji policz_oplate_za_karty_platnicze.
+-- nie przechodzi
+SELECT ID_klienta, policz_oplate_za_karty_platnicze(ID_klienta),
+        NVL(karty_debetowe, 0) AS karty_debetowe,
+        NVL(karty_kredytowe, 0) AS karty_kredytowe
+FROM KLIENCI
+LEFT JOIN (SELECT ID_klienta, COUNT(ID_karty) AS karty_debetowe
+           FROM KLIENCI
+           INNER JOIN PRZYNALEZNOSCI_KONT USING(ID_klienta)
+           INNER JOIN KONTA USING(ID_konta)
+           INNER JOIN KARTY USING(ID_konta)
+           WHERE zablokowana = 0 AND ((CURRENT_DATE) < data_wygasniecia OR data_wygasniecia IS NULL) AND KARTY.typ_karty = 'debit'
+           GROUP BY ID_klienta) USING(ID_klienta)
+LEFT JOIN (SELECT ID_klienta, COUNT(ID_karty) AS karty_kredytowe
+           FROM KLIENCI
+           INNER JOIN PRZYNALEZNOSCI_KONT USING(ID_klienta)
+           INNER JOIN KONTA USING(ID_konta)
+           INNER JOIN KARTY USING(ID_konta)
+           WHERE zablokowana = 0 AND ((CURRENT_DATE) < data_wygasniecia OR data_wygasniecia IS NULL) AND KARTY.typ_karty = 'credit'
+           GROUP BY ID_klienta) USING(ID_klienta)
+ORDER BY ID_klienta;
+-- druga wersja:
+SELECT ID_klienta, policz_oplate_za_karty_platnicze(ID_klienta) AS "miesięczna opŁata za karty"
+FROM KLIENCI;
+
+
 -- Zapytanie demonstruje działanie funkcji policz_najblizszy_termin_splaty.
-SELECT ID_klienta, min(termin_splaty) as "koniec terminu najbliższej pożyczki",
-        policz_najblizszy_termin_splaty(ID_klienta) as "dni do spłaty"
+SELECT ID_klienta, min(termin_splaty) AS "koniec terminu najbliższej pożyczki",
+        policz_najblizszy_termin_splaty(ID_klienta) AS "dni do spłaty"
 FROM POZYCZKI
 INNER JOIN PRZYNALEZNOSCI_KONT USING(ID_konta)
 INNER JOIN KLIENCI USING(ID_klienta)
