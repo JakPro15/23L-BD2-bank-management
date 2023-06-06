@@ -20,4 +20,5 @@ DROP PROCEDURE IF EXISTS splac_pozyczke;
 DROP PROCEDURE IF EXISTS wez_pozyczke;
 DROP PROCEDURE IF EXISTS sprawdz_pozyczke_na_karte;
 
+DROP FUNCTION IF EXISTS policz_najblizszy_termin_splaty;
 DROP FUNCTION IF EXISTS policz_calkowite_saldo;

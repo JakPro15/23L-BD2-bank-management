@@ -122,3 +122,12 @@ INNER JOIN PRZYNALEZNOSCI_KONT USING(ID_klienta)
 INNER JOIN KONTA USING(ID_konta)
 INNER JOIN SALDA USING(ID_konta)
 INNER JOIN LOKATY USING(ID_konta, skrot_nazwy_waluty);
+
+
+-- Zapytanie demonstruje działanie funkcji policz_najblizszy_termin_splaty.
+SELECT ID_klienta, min(termin_splaty) as "koniec terminu najbliższej pożyczki",
+        policz_najblizszy_termin_splaty(ID_klienta) as "dni do spłaty"
+FROM POZYCZKI
+INNER JOIN PRZYNALEZNOSCI_KONT USING(ID_konta)
+INNER JOIN KLIENCI USING(ID_klienta)
+GROUP BY ID_klienta;

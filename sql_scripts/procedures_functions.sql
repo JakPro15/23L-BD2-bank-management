@@ -233,3 +233,29 @@ BEGIN
 
     RETURN v_balans_calkowity + v_suma_lokat - v_suma_pozyczek;
 END//
+
+
+-- Funkcja oblicza termin spłaty najbliższej pożyczki wziętej przez klienta
+CREATE FUNCTION policz_najblizszy_termin_splaty(p_ID_klienta INT)
+RETURNS INT
+DETERMINISTIC
+BEGIN
+    DECLARE v_termin_splaty DATE;
+
+    SELECT min(termin_splaty)
+    INTO v_termin_splaty
+    FROM POZYCZKI
+    INNER JOIN PRZYNALEZNOSCI_KONT USING(ID_konta)
+    INNER JOIN KLIENCI USING(ID_klienta)
+    WHERE ID_klienta = p_ID_klienta AND do_splaty > 0;
+
+    IF v_termin_splaty IS NULL
+    THEN
+        RETURN -1;
+    ELSEIF v_termin_splaty <= (CURRENT_DATE)
+    THEN
+        RETURN 0;
+    ELSE
+        RETURN DATEDIFF(v_termin_splaty, (CURRENT_DATE));
+    END IF;
+END//
