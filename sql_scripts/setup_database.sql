@@ -96,7 +96,7 @@ CREATE TABLE POZYCZKI (
 
 CREATE TABLE LOKATY (
     ID_lokaty INT AUTO_INCREMENT PRIMARY KEY,
-    obecna_kwota DECIMAL(40, 20) NOT NULL CHECK(obecna_kwota > 0),
+    obecna_kwota DECIMAL(40, 20) NOT NULL CHECK(obecna_kwota >= 0),
     data_zalozenia DATE DEFAULT (CURRENT_DATE) NOT NULL,
     data_zakonczenia DATE,
     data_konca_blokady DATE,

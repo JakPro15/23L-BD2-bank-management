@@ -136,6 +136,51 @@ BEGIN
 END//
 
 
+-- Procedura rejestruje wyjęcie pieniędzy z lokaty przez podane konto i dodaje pieniądze do konta.
+CREATE PROCEDURE wyciagnij_z_lokaty(IN p_kwota_do_wyjecia DECIMAL(40, 20), IN p_ID_lokaty INT)
+BEGIN
+    DECLARE v_obecna_kwota DECIMAL(40, 20);
+    DECLARE v_data_konca_blokady DATE;
+    DECLARE v_ID_konta INT;
+    DECLARE v_skrot_nazwy_waluty CHAR(3);
+    DECLARE v_kwota_do_wyjecia DECIMAL(40, 20);
+
+    SELECT obecna_kwota, data_konca_blokady, ID_konta, skrot_nazwy_waluty
+    INTO v_obecna_kwota, v_data_konca_blokady, v_ID_konta, v_skrot_nazwy_waluty
+    FROM LOKATY
+    WHERE ID_lokaty = p_ID_lokaty;
+
+    IF v_obecna_kwota > 0
+    THEN
+        IF v_data_konca_blokady IS NULL OR (CURRENT_DATE) >= v_data_konca_blokady
+        THEN
+            IF p_kwota_do_wyjecia > v_obecna_kwota
+            THEN
+                SET v_kwota_do_wyjecia = v_obecna_kwota;
+
+                UPDATE LOKATY
+                SET data_zakonczenia = (CURRENT_DATE), obecna_kwota = 0
+                WHERE ID_lokaty = p_ID_lokaty;
+            ELSE
+                SET v_kwota_do_wyjecia = p_kwota_do_wyjecia;
+
+                UPDATE LOKATY
+                SET obecna_kwota = obecna_kwota - v_kwota_do_wyjecia
+                WHERE ID_lokaty = p_ID_lokaty;
+            END IF;
+
+            UPDATE SALDA
+            SET obecne_saldo = obecne_saldo + v_kwota_do_wyjecia
+            WHERE ID_konta = v_ID_konta AND skrot_nazwy_waluty = v_skrot_nazwy_waluty;
+        ELSE
+            SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Nie możesz wyjąć pieniędzy przed zakończeniem blokady!';
+        END IF;
+    ELSE
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Ta lokata jest już pusta!';
+    END IF;
+END//
+
+
 -- Funkcja oblicza ogólne saldo w PLN wszystkich kont klienta, wliczając pożyczki i lokaty.
 CREATE FUNCTION policz_calkowite_saldo(p_ID_klienta INT)
 RETURNS DECIMAL

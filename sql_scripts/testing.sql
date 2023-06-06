@@ -70,6 +70,34 @@ ORDER BY data_zalozenia DESC
 LIMIT 1;
 
 
+-- Poniżej jest demonstracja działania procedury wyciagnij_z_lokaty.
+-- Stan konta i kwota na lokacie przed wyjęciem środków:
+SELECT s.ID_konta, s.skrot_nazwy_waluty, s.obecne_saldo, l.obecna_kwota, l.data_zakonczenia
+FROM SALDA s
+INNER JOIN LOKATY l USING(ID_konta, skrot_nazwy_waluty)
+WHERE l.ID_lokaty = 1;
+
+-- Wyciągamy wszystkie środki z lokaty (oczywiście moglibyśmy również i mniej):
+CALL wyciagnij_z_lokaty(26700, 1);
+
+-- Lokata pomniejszyła się, ustawiona została data zakończenia na dzisiejszą,
+-- a kwota została dodana do salda:
+SELECT s.ID_konta, s.skrot_nazwy_waluty, s.obecne_saldo, l.obecna_kwota, l.data_zakonczenia
+FROM SALDA s
+INNER JOIN LOKATY l USING(ID_konta, skrot_nazwy_waluty)
+WHERE l.ID_lokaty = 1;
+
+-- Nie możemy wyciągnąć środków z lokaty, na której blokada jeszcze nie minęła:
+SELECT s.ID_konta, s.skrot_nazwy_waluty, s.obecne_saldo, l.obecna_kwota, l.data_konca_blokady
+FROM SALDA s
+INNER JOIN LOKATY l USING(ID_konta, skrot_nazwy_waluty)
+WHERE l.ID_lokaty = 5;
+
+-- Próba wyciągnięcia środków z lokaty:
+CALL wyciagnij_z_lokaty(100, 5);
+-- Kończy się niepowodzeniem i zasygnalizowaną informacją.
+
+
 -- Zapytanie demonstruje działanie funkcji policz_calkowite_saldo.
 -- Pokazuje ilość pieniędzy na wszystkich kontach, pożyczkach i lokatach każdego z klientów.
 SELECT ID_klienta, 'konto' as typ, skrot_nazwy_waluty AS waluta, obecne_saldo,
