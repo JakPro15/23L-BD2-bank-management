@@ -1,12 +1,40 @@
+from __future__ import annotations
+
 from abc import ABC
 from dataclasses import dataclass
-from typing import Type
+from typing import Type, Self, Any, get_args, get_type_hints, TYPE_CHECKING
+if TYPE_CHECKING:
+    from .database import Database
+from .database_errors import DatabaseTransactionError
 
 import PySide6.QtSql as sql
 
 
 class Data(ABC):
-    pass
+    @classmethod
+    def from_query(cls, query: sql.QSqlQuery) -> Self:
+        parameters: dict[str, Any] = {}
+        for attribute in vars(cls()).keys():
+            if attribute in attribute_mapping:
+                parameters[attribute] = query.value(attribute_mapping[attribute])
+            else:
+                attribute_type: Type[Data] = get_args(get_type_hints(cls)[attribute])[0]
+                parameters[attribute] = attribute_type.from_query(query)
+        return cls(**parameters)  # type: ignore
+
+    @classmethod
+    def load_all(cls, database: Database) -> list[Self]:
+        query = sql.QSqlQuery(database.connection)
+        query.prepare(f"SELECT * FROM {view_mapping[cls]}")
+        if not query.exec():
+            raise DatabaseTransactionError(
+                f"Could not collect data from table {view_mapping[cls]}"
+            )
+        result: list[Self] = []
+        while query.next():
+            data = cls.from_query(query)
+            result.append(data)
+        return result
 
 
 @dataclass
@@ -19,25 +47,13 @@ class AddressData(Data):
     house_nr: str | None = None
     apartment_nr: str | None = None
 
-    @classmethod
-    def from_query(cls, query: sql.QSqlQuery):
-        return cls(
-            address_id=query.value("ID_adresu"),
-            country=query.value("kraj"),
-            city=query.value("miejscowosc"),
-            post_code=query.value("kod_pocztowy"),
-            street=query.value("ulica"),
-            house_nr=query.value("numer_domu"),
-            apartment_nr=query.value("numer_mieszkania"),
-        )
-
 
 @dataclass
 class ClientData(Data, ABC):
     client_id: int | None = None
     address: AddressData | None = None
     email: str | None = None
-    nr_tel: str | None = None
+    phone_nr: str | None = None
 
     @property
     def address_id(self) -> int | None:
@@ -71,12 +87,24 @@ class CompanyData(ClientData):
         return "firma"
 
 
-name_mapping: dict[Type[Data] | str, str] = {
+view_mapping: dict[Type[Data], str] = {
     AddressData: "ADRESY",
-    PersonData: "KLIENCI",
-    CompanyData: "KLIENCI",
+    PersonData: "KLIENCI_OSOBY",
+    CompanyData: "KLIENCI_FIRMY"
+}
+
+
+attribute_mapping: dict[str, str] = {
+    "address_id": "ID_adresu",
+    "country": "kraj",
+    "city": "miejscowosc",
+    "post_code": "kod_pocztowy",
+    "street": "ulica",
+    "house_nr": "numer_domu",
+    "apartment_nr": "numer_mieszkania",
+    "client_id": "ID_klienta",
     "email": "email",
-    "nr_tel": "numer_telefonu",
+    "phone_nr": "numer_telefonu",
     "first_name": "imie",
     "last_name": "nazwisko",
     "PESEL": "PESEL",
@@ -84,3 +112,8 @@ name_mapping: dict[Type[Data] | str, str] = {
     "name": "nazwa",
     "NIP": "NIP",
 }
+
+
+if __name__ == "__main__":
+    # inv_map = {v: k for k, v in name_mapping.items()}
+    print(get_args(get_type_hints(ClientData)['address'])[0])

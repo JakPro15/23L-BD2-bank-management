@@ -23,7 +23,8 @@ class ClientsWidget(QWidget):
             pass
 
     def _load_database(self, database: Database):
-        people_data, companies_data = database.show_client_data()
+        people_data = PersonData.load_all(database)
+        companies_data = CompanyData.load_all(database)
         for data in people_data:
             self.insert_person_data(data)
         for data in companies_data:
@@ -36,7 +37,7 @@ class ClientsWidget(QWidget):
             str(data.client_id),
             str(data.address_id),
             set_optional_str(data.email),
-            set_optional_str(data.nr_tel),
+            set_optional_str(data.phone_nr),
             data.first_name,
             data.last_name,
             data.PESEL,
@@ -52,7 +53,7 @@ class ClientsWidget(QWidget):
             str(data.client_id),
             str(data.address_id),
             set_optional_str(data.email),
-            set_optional_str(data.nr_tel),
+            set_optional_str(data.phone_nr),
             data.name,
             data.NIP,
         ]

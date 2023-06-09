@@ -50,6 +50,6 @@ class AddressesWidget(QWidget):
     def _load_database(self, database: Database):
         self._address_dialog._load_database(database)
         self._database = database
-        addresses = database.load_addresses()
+        addresses = AddressData.load_all(database)
         for address in addresses:
             self.insert_data(address)
