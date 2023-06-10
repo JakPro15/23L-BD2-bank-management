@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from abc import ABC
+from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from typing import Type, Self, Any, get_args, get_type_hints, TYPE_CHECKING
 if TYPE_CHECKING:
@@ -11,16 +11,26 @@ import PySide6.QtSql as sql
 
 
 class Data(ABC):
+    @staticmethod
+    @abstractmethod
+    def table_name() -> str:
+        ...
+
+    @staticmethod
+    @abstractmethod
+    def insert_procedure_name() -> str:
+        ...
+
     @classmethod
     def from_query(cls, query: sql.QSqlQuery) -> Self:
         parameters: dict[str, Any] = {}
-        for attribute in vars(cls()).keys():
+        for attribute in vars(cls()):
             if attribute in attribute_mapping:
                 parameters[attribute] = query.value(attribute_mapping[attribute])
             else:
                 attribute_type: Type[Data] = get_args(get_type_hints(cls)[attribute])[0]
                 parameters[attribute] = attribute_type.from_query(query)
-        return cls(**parameters)  # type: ignore
+        return cls(**parameters)  # type: ignore - Data.from_query won't be called anyway
 
     @classmethod
     def load_all(cls, database: Database) -> list[Self]:
@@ -36,9 +46,63 @@ class Data(ABC):
             result.append(data)
         return result
 
+    def _attribute_names_for_query(self) -> tuple[str, str]:
+        attributes = ""
+        id = ""
+        first = True
+        for attribute in vars(self):
+            if attribute[-3:] == "_id":
+                id = attribute
+            else:
+                if first:
+                    first = False
+                else:
+                    attributes += ", "
+                if attribute in attribute_mapping:
+                    attributes += f":{attribute}"
+                else:
+                    attributes += getattr(self, attribute)._attribute_names_for_query()[1]
+        return id, attributes
+
+    def _bind_non_id_attributes(self, query: sql.QSqlQuery) -> None:
+        for attribute in vars(self):
+            if attribute in attribute_mapping:
+                if f":{attribute}" in query.lastQuery():
+                    query.bindValue(f":{attribute}", getattr(self, attribute))
+            else:
+                getattr(self, attribute)._bind_non_id_attributes(query)
+
+    def insert(self, database: Database) -> None:
+        with database.transaction():
+            id, attributes = self._attribute_names_for_query()
+            query_string = f"CALL {self.insert_procedure_name()}(@id, {attributes})"
+            query = database.create_query(self, query_string)
+            print(query_string)
+            if not query.exec():
+                raise DatabaseTransactionError(f"Could not insert a {type(self).__name__} object into the database")
+        setattr(self, id, database.get_last_id())
+
+
+class ModifiableData(Data, ABC):
+    @staticmethod
+    @abstractmethod
+    def update_procedure_name() -> str:
+        ...
+
+    def update(self, database: Database):
+        ...
+
 
 @dataclass
 class AddressData(Data):
+    @staticmethod
+    def table_name() -> str:
+        return "ADRESY"
+
+    @staticmethod
+    def insert_procedure_name() -> str:
+        return "adres_insert"
+
     address_id: int | None = None
     country: str | None = None
     city: str | None = None
@@ -67,6 +131,14 @@ class ClientData(Data, ABC):
 
 @dataclass
 class PersonData(ClientData):
+    @staticmethod
+    def table_name() -> str:
+        return "KLIENCI_OSOBY"
+
+    @staticmethod
+    def insert_procedure_name() -> str:
+        return "osoba_insert"
+
     first_name: str | None = None
     last_name: str | None = None
     PESEL: str | None = None
@@ -112,8 +184,3 @@ attribute_mapping: dict[str, str] = {
     "name": "nazwa",
     "NIP": "NIP",
 }
-
-
-if __name__ == "__main__":
-    # inv_map = {v: k for k, v in name_mapping.items()}
-    print(get_args(get_type_hints(ClientData)['address'])[0])

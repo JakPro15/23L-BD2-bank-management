@@ -10,9 +10,9 @@ from src.database.database_errors import (
     NoneValueError,
 )
 from src.database.datatypes import (
+    Data,
     AddressData,
     ClientData,
-    CompanyData,
     PersonData,
     attribute_mapping,
 )
@@ -65,18 +65,21 @@ class Database:
         else:
             return "="
 
-    def create_query(self, to_bind: object, query_str: str) -> sql.QSqlQuery:
-        values_bound: list[str] = re.findall(r":[\w\d]+\b", query_str)
-
+    def create_query(self, to_bind: Data, query_str: str) -> sql.QSqlQuery:
         query = sql.QSqlQuery(self.connection)
         query.prepare(query_str)
-
-        for attribute_name in values_bound:
-            query.bindValue(
-                attribute_name, getattr(to_bind, attribute_name[1:], None)
-            )
-
+        to_bind._bind_non_id_attributes(query)
         return query
+
+    def get_last_id(self) -> int:
+        query = sql.QSqlQuery(self.connection)
+        query.prepare("SELECT @id")
+
+        if not query.exec():
+            raise DatabaseTransactionError("Failed to read ID of last inserted object")
+
+        query.next()
+        return query.value("@id")
 
     def check_address(self, address_data: AddressData) -> int | None:
         query_keyword: str = Database.apartment_keyword(address_data)
@@ -114,13 +117,14 @@ class Database:
             if address_id is None:
                 address_query = self.create_query(
                     client.address,
-                    "INSERT INTO ADRESY (ID_adresu, kraj, miejscowosc, kod_pocztowy, ulica, numer_domu, numer_mieszkania) "
+                    "INSERT INTO ADRESY (ID_adresu, kraj, miejscowosc, kod_pocztowy, ulica, numer_domu, "
+                    "numer_mieszkania) "
                     "VALUES (NULL, :country, :city, :post_code, :street, :house_nr, :apartment_nr)",
                 )
 
                 if not address_query.exec():
                     raise DatabaseTransactionError(
-                        "Could not insert the address into the database"
+                        "Could not insert the address into the database: "
                     )
 
                 address_id = self.check_address(client.address)
@@ -129,8 +133,10 @@ class Database:
 
             query = self.create_query(
                 client,
-                "INSERT INTO KLIENCI (ID_klienta, ID_adresu, email, numer_telefonu, selektor, imie, nazwisko, PESEL, plec, nazwa, NIP) "
-                "VALUES (NULL, :address_id, :email, :nr_tel, :selector, :first_name, :last_name, :PESEL, :sex, :name, :NIP)",
+                "INSERT INTO KLIENCI (ID_klienta, ID_adresu, email, numer_telefonu, selektor, imie, nazwisko, "
+                "PESEL, plec, nazwa, NIP) "
+                "VALUES (NULL, :address_id, :email, :nr_tel, :selector, :first_name, :last_name, :PESEL, :sex, "
+                ":name, :NIP)",
             )
 
             if not query.exec():
