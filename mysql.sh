@@ -22,6 +22,7 @@ case $1 in
         $mysqld --defaults-file="$HOME/bd2_23L_z09_mysql/mysql_config.cnf" &
     else
         echo "mysqld is already running."
+        exit 1
     fi;;
 "stop")
     check_running

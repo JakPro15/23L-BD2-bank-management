@@ -68,7 +68,7 @@ class Database:
     def create_query(self, to_bind: Data, query_str: str) -> sql.QSqlQuery:
         query = sql.QSqlQuery(self.connection)
         query.prepare(query_str)
-        to_bind._bind_non_id_attributes(query)
+        to_bind.bind_non_id_attributes(query)
         return query
 
     def get_last_id(self) -> int:
