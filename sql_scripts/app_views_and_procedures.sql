@@ -65,7 +65,7 @@ CREATE PROCEDURE osoba_insert(
     IN p_numer_domu VARCHAR(8),
     IN p_numer_mieszkania VARCHAR(8),
     IN p_email VARCHAR(50),
-    IN p_numer_telefonu CHAR(10),
+    IN p_numer_telefonu CHAR(14),
     IN p_imie VARCHAR(50),
     IN p_nazwisko VARCHAR(50),
     IN p_PESEL CHAR(11),
@@ -85,6 +85,14 @@ BEGIN
 END//
 
 
+CREATE TRIGGER adresy_niemodyfikowalne
+BEFORE UPDATE ON ADRESY
+FOR EACH ROW
+BEGIN
+    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Wiersze tabeli ADRESY nie powinny być modyfikowane.';
+END//
+
+
 CREATE PROCEDURE osoba_update(
     IN p_id_klienta INT,
     IN p_kraj VARCHAR(40),
@@ -94,7 +102,7 @@ CREATE PROCEDURE osoba_update(
     IN p_numer_domu VARCHAR(8),
     IN p_numer_mieszkania VARCHAR(8),
     IN p_email VARCHAR(50),
-    IN p_numer_telefonu CHAR(10),
+    IN p_numer_telefonu CHAR(14),
     IN p_imie VARCHAR(50),
     IN p_nazwisko VARCHAR(50),
     IN p_PESEL CHAR(11),
@@ -136,7 +144,7 @@ CREATE PROCEDURE firma_insert(
     IN p_numer_domu VARCHAR(8),
     IN p_numer_mieszkania VARCHAR(8),
     IN p_email VARCHAR(50),
-    IN p_numer_telefonu CHAR(10),
+    IN p_numer_telefonu CHAR(14),
     IN p_nazwa VARCHAR(50),
     IN p_NIP CHAR(12)
 )
@@ -163,16 +171,23 @@ CREATE PROCEDURE firma_update(
     IN p_numer_domu VARCHAR(8),
     IN p_numer_mieszkania VARCHAR(8),
     IN p_email VARCHAR(50),
-    IN p_numer_telefonu CHAR(10),
+    IN p_numer_telefonu CHAR(14),
     IN p_nazwa VARCHAR(50),
     IN p_NIP CHAR(12)
 )
 BEGIN
+    DECLARE v_stare_id_adresu INT;
     DECLARE v_id_adresu INT;
+    DECLARE CONTINUE HANDLER FOR 1451 BEGIN END;
 
     IF (SELECT selektor FROM KLIENCI WHERE ID_klienta = p_id_klienta) <> 'firma' THEN
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Nie można zmienić osoby w firmę.';
     END IF;
+
+    SELECT ID_adresu
+    INTO v_stare_id_adresu
+    FROM KLIENCI
+    WHERE ID_klienta = p_id_klienta;
 
     CALL adres_insert(v_id_adresu, p_kraj, p_miejscowosc, p_kod_pocztowy,
                       p_ulica, p_numer_domu, p_numer_mieszkania);
@@ -181,11 +196,25 @@ BEGIN
     SET ID_adresu = v_id_adresu, email = p_email, numer_telefonu = p_numer_telefonu,
         nazwa = p_nazwa, NIP = p_NIP
     WHERE ID_klienta = p_id_klienta;
+
+    DELETE FROM ADRESY
+    WHERE ID_adresu = v_stare_id_adresu;
 END//
 
 
 CREATE PROCEDURE klient_delete(IN p_id_klienta INT)
 BEGIN
+    DECLARE v_stare_id_adresu INT;
+    DECLARE CONTINUE HANDLER FOR 1451 BEGIN END;
+
+    SELECT ID_adresu
+    INTO v_stare_id_adresu
+    FROM KLIENCI
+    WHERE ID_klienta = p_id_klienta;
+
     DELETE FROM KLIENCI
     WHERE ID_klienta = p_id_klienta;
+
+    DELETE FROM ADRESY
+    WHERE ID_adresu = v_stare_id_adresu;
 END//

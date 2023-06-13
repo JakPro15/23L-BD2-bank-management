@@ -32,6 +32,8 @@ class Data(ABC):
         for attribute in vars(cls()):
             if attribute in attribute_mapping:
                 parameters[attribute] = query.value(attribute_mapping[attribute])
+                if parameters[attribute] == "":
+                    parameters[attribute] = None
             else:
                 attribute_type: Type[Data] = get_args(get_type_hints(cls)[attribute])[0]
                 parameters[attribute] = attribute_type.from_query(query)
@@ -142,7 +144,6 @@ class AddressData(Data):
     def delete_procedure_name() -> str:
         return "adres_delete"
 
-    address_id: int | None = None
     country: str | None = None
     city: str | None = None
     post_code: str | None = None

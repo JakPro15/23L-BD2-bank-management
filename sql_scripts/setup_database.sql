@@ -14,7 +14,7 @@ CREATE TABLE KLIENCI (
     ID_klienta INT AUTO_INCREMENT PRIMARY KEY,
     ID_adresu INT NOT NULL,
     email VARCHAR(50),
-    numer_telefonu CHAR(10),
+    numer_telefonu CHAR(14),
     selektor CHAR(5) NOT NULL,
     imie VARCHAR(50),
     nazwisko VARCHAR(50),

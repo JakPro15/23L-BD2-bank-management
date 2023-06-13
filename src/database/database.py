@@ -1,4 +1,3 @@
-import re
 from contextlib import contextmanager
 from os.path import expanduser
 
