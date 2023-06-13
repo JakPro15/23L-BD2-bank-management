@@ -3,15 +3,14 @@ import pathlib
 import time
 
 if __name__ == "__main__":
-
     script_location = pathlib.Path(__file__).parents[2].joinpath("mysql.sh")
     remake_location = pathlib.Path(__file__).parents[2].joinpath("remake_db.sh")
     sql_scripts_location = pathlib.Path(__file__).parents[2].joinpath("sql_scripts")
     mysql_location = pathlib.Path.home().joinpath("bd2_23L_z09_mysql/mysql/bin/mysql")
 
     # provides clean database to run tests on
-    subprocess.run([script_location, "start"])
-    time.sleep(2.) # necessary evil
+    if subprocess.run([script_location, "start"]).returncode == 0:
+        time.sleep(2.)
     subprocess.run([remake_location])
 
     with open(sql_scripts_location.joinpath("testing.sql"), "r") as script:
@@ -20,7 +19,6 @@ if __name__ == "__main__":
         wait = False
 
         while True:
-
             line = script.readline()
             if not line:
                 break
@@ -51,12 +49,12 @@ if __name__ == "__main__":
                             "bd2-23L-z09"
                         ],
                         stdin=subprocess.PIPE,
-                        stdout=subprocess.PIPE
+                        stdout=subprocess.PIPE,
+                        stderr=subprocess.STDOUT
                     )
 
                     out, _ = mysql.communicate(command.encode())
-                    mysql.kill()
-                    print(out.decode())
+                    print(*["RESULT: " + result_line for result_line in out.decode().split('\n')[:-1]], sep='\n')
 
                     command = ""
                     wait = True
@@ -74,4 +72,3 @@ if __name__ == "__main__":
                 if wait:
                     wait = False
                     input()
-    
