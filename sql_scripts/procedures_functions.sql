@@ -224,6 +224,68 @@ BEGIN
 END//
 
 
+-- Procedura wykonująca przelew wewnętrzny
+CREATE PROCEDURE wykonaj_przelew_wewnetrzny(
+    IN p_ID_nadawcy INT,
+    IN p_ID_odbiorcy INT,
+    IN p_kwota_do_przelania DECIMAL(40, 20),
+    IN p_skrot_nazwy_waluty CHAR(3),
+    IN p_tytul VARCHAR(50),
+    IN p_adres_odbiorcy VARCHAR(100)
+)
+BEGIN
+    DECLARE v_saldo_nadawcy DECIMAL(40, 20);
+    DECLARE v_saldo_odbiorcy DECIMAL(40, 20);
+
+    DECLARE CONTINUE HANDLER FOR NOT FOUND
+    BEGIN
+        IF v_saldo_nadawcy IS NULL
+        THEN
+            SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Nadawca nie posiada salda w podanej walucie';
+        END IF;
+        
+        IF v_saldo_odbiorcy IS NULL
+        THEN
+            INSERT INTO SALDA VALUES (
+                p_ID_odbiorcy, p_skrot_nazwy_waluty, 0
+            );
+            SET v_saldo_odbiorcy = 0;
+        END IF;
+    END;
+
+    SELECT obecne_saldo
+    INTO v_saldo_nadawcy
+    FROM SALDA
+    WHERE ID_konta = p_ID_nadawcy AND skrot_nazwy_waluty = p_skrot_nazwy_waluty;
+
+    SELECT obecne_saldo
+    INTO v_saldo_odbiorcy
+    FROM SALDA
+    WHERE ID_konta = p_ID_odbiorcy AND skrot_nazwy_waluty = p_skrot_nazwy_waluty;
+
+    IF v_saldo_nadawcy < p_kwota_do_przelania
+    THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Nadawcy nie stać na przelew';
+    END IF;
+
+    UPDATE SALDA
+    SET obecne_saldo = v_saldo_nadawcy - p_kwota_do_przelania
+    WHERE ID_konta = p_ID_nadawcy AND skrot_nazwy_waluty = p_skrot_nazwy_waluty;
+
+    UPDATE SALDA
+    SET obecne_saldo = v_saldo_odbiorcy + p_kwota_do_przelania
+    WHERE ID_konta = p_ID_odbiorcy AND skrot_nazwy_waluty = p_skrot_nazwy_waluty;
+
+    INSERT INTO TRANSAKCJE VALUES (
+        NULL, v_saldo_nadawcy, v_saldo_nadawcy - p_kwota_do_przelania,
+        (CURRENT_DATE), p_tytul, p_adres_odbiorcy,
+        p_ID_nadawcy, p_skrot_nazwy_waluty,
+        p_ID_odbiorcy, p_skrot_nazwy_waluty,
+        NULL
+    );
+END//
+
+
 -- Funkcja oblicza ogólne saldo w PLN wszystkich kont klienta, wliczając pożyczki i lokaty.
 CREATE FUNCTION policz_calkowite_saldo(p_ID_klienta INT)
 RETURNS DECIMAL
