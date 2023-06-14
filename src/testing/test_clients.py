@@ -76,6 +76,12 @@ def test_company_delete(database):
     assert len(AddressData.load_all(database)) == number_of_addresses - 1
 
 
+def test_clients_accounts(database):
+    person = PersonData.load_all(database)[0]
+    accounts = person.accounts(database)
+    assert {account.id for account in accounts} == {1, 26, 27, 28}
+
+
 if __name__ == "__main__":
     with testing_database() as database:
         test_osoba_insert(database)
@@ -84,3 +90,4 @@ if __name__ == "__main__":
         test_company_insert(database)
         test_company_update(database)
         test_company_delete(database)
+        test_clients_accounts(database)

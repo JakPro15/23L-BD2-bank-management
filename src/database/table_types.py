@@ -3,7 +3,10 @@ from __future__ import annotations
 from abc import ABC
 from dataclasses import dataclass
 from PySide6.QtCore import QDate
+import PySide6.QtSql as sql
 
+from src.database.database import Database
+from src.database.database_errors import DatabaseTransactionError
 from src.database.abstract_data import Data, ModifiableData
 
 
@@ -27,6 +30,20 @@ class ClientData(ModifiableData, ABC):
     address: AddressData = None
     email: str = None
     phone_nr: str = None
+
+    def accounts(self, database) -> list[AccountData]:
+        query = sql.QSqlQuery(database.connection)
+        query.prepare("SELECT * FROM KONTA_KLIENTOW WHERE ID_klienta = :client_id")
+        query.bindValue(":client_id", self.id)
+        if not query.exec():
+            raise DatabaseTransactionError(
+                "Could not collect data from table KONTA_KLIENTOW"
+            )
+        result: list[AccountData] = []
+        while query.next():
+            data = AccountData.from_query(query)
+            result.append(data)
+        return result
 
 
 @dataclass
@@ -117,3 +134,19 @@ class AccountData(ModifiableData):
     closing_date: QDate | None = None
     transaction_limit: float | None = None
     account_type: AccountTypeData = None
+
+    def clients(self, database: Database) -> list[ClientData]:
+        query = sql.QSqlQuery(database.connection)
+        query.prepare("SELECT * FROM WLASCICIELE_KONT WHERE ID_konta = :account_id")
+        query.bindValue(":account_id", self.id)
+        if not query.exec():
+            raise DatabaseTransactionError(
+                "Could not collect data from table WLASCICIELE_KONT"
+            )
+        result: list[ClientData] = []
+        while query.next():
+            if query.value("selektor") == "osoba":
+                result.append(PersonData.from_query(query))
+            else:
+                result.append(CompanyData.from_query(query))
+        return result

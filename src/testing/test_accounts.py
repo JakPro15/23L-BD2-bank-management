@@ -39,8 +39,15 @@ def test_account_delete(database):
     assert len(AccountTypeData.load_all(database)) == number_of_account_types - 1
 
 
+def test_accounts_clients(database):
+    account = AccountData.load_all(database)[1]
+    owners = account.clients(database)
+    assert {owner.id for owner in owners} == {2, 19}
+
+
 if __name__ == "__main__":
     with testing_database() as database:
         test_account_insert(database)
         test_account_update(database)
         test_account_delete(database)
+        test_accounts_clients(database)

@@ -1,6 +1,7 @@
 USE `bd2-23L-z09`;
 
-DROP VIEW IF EXISTS KLIENCI_OSOBY, KLIENCI_FIRMY, KONTA_Z_TYPEM;
+DROP VIEW IF EXISTS KLIENCI_OSOBY, KLIENCI_FIRMY, KONTA_Z_TYPEM,
+    KONTA_KLIENTOW, WLASCICIELE_KONT;
 DROP PROCEDURE IF EXISTS adres_insert;
 DROP PROCEDURE IF EXISTS osoba_insert;
 DROP PROCEDURE IF EXISTS osoba_update;
@@ -30,6 +31,22 @@ CREATE VIEW KONTA_Z_TYPEM AS
     SELECT ID_konta, numer_konta, data_utworzenia, data_zamkniecia,
            IFNULL(limit_transakcji, -1.0) as limit_transakcji, nazwa, wersja
     FROM KONTA INNER JOIN TYPY_KONTA USING(ID_typu_konta);
+
+
+CREATE VIEW KONTA_KLIENTOW AS
+    SELECT ID_klienta, ID_konta, numer_konta, data_utworzenia, data_zamkniecia,
+           IFNULL(limit_transakcji, -1.0) as limit_transakcji, nazwa, wersja
+    FROM PRZYNALEZNOSCI_KONT
+    INNER JOIN KONTA USING(ID_konta)
+    INNER JOIN TYPY_KONTA USING(ID_typu_konta);
+
+
+CREATE VIEW WLASCICIELE_KONT AS
+    SELECT ID_konta, ID_klienta, kraj, miejscowosc, kod_pocztowy, ulica, numer_domu, numer_mieszkania,
+           email, numer_telefonu, selektor, imie, nazwisko, PESEL, plec, nazwa, NIP
+    FROM PRZYNALEZNOSCI_KONT
+    INNER JOIN KLIENCI USING(ID_klienta)
+    INNER JOIN ADRESY USING(ID_adresu);
 
 
 DELIMITER //
