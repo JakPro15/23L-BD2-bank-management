@@ -4,7 +4,7 @@ from PySide6.QtWidgets import QDialog, QWidget
 
 from src.database.database import Database
 from src.database.database_errors import DatabaseTransactionError
-from src.database.datatypes import AddressData
+from src.database.table_types import AddressData
 from src.ui.generated.dialogs.address_dialog import Ui_AddressDialog
 
 

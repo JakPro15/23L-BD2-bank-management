@@ -1,6 +1,6 @@
 #!/usr/bin/python3.11
 from db_connection_testing import testing_database
-from src.database.datatypes import PersonData, CompanyData, AddressData
+from src.database.table_types import PersonData, CompanyData, AddressData
 
 
 def test_osoba_insert(database):

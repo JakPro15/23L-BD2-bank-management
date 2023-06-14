@@ -3,7 +3,7 @@ from typing import Optional
 from PySide6.QtWidgets import QTableWidgetItem, QWidget
 
 from src.database.database import Database
-from src.database.datatypes import CompanyData, PersonData
+from src.database.table_types import CompanyData, PersonData
 from src.helpers import set_optional_str
 from src.ui.dialogs.clients_dialog import ClientsDialog
 from src.ui.generated.clients_widget import Ui_ClientsWidget
@@ -35,7 +35,7 @@ class ClientsWidget(QWidget):
         self._ui.people_table.insertRow(new_row)
         row_entry = [
             str(data.client_id),
-            str(data.address_id),
+            str(0),
             set_optional_str(data.email),
             set_optional_str(data.phone_nr),
             data.first_name,
@@ -50,8 +50,8 @@ class ClientsWidget(QWidget):
         new_row = self._ui.companies_table.rowCount()
         self._ui.companies_table.insertRow(new_row)
         row_entry = [
-            str(data.client_id),
-            str(data.address_id),
+            str(data.id),
+            str(0),
             set_optional_str(data.email),
             set_optional_str(data.phone_nr),
             data.name,

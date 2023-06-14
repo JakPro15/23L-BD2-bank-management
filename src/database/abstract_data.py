@@ -1,11 +1,7 @@
-from __future__ import annotations
-
 from abc import ABC, abstractmethod
-from dataclasses import dataclass
-from typing import Type, Self, Any, get_args, get_type_hints, TYPE_CHECKING
-if TYPE_CHECKING:
-    from .database import Database
-from .database_errors import DatabaseTransactionError, IdMissingError
+from typing import Type, Self, Any, get_args, get_type_hints
+from src.database.database import Database
+from src.database.database_errors import DatabaseTransactionError, IdMissingError
 
 import PySide6.QtSql as sql
 
@@ -42,10 +38,10 @@ class Data(ABC):
     @classmethod
     def load_all(cls, database: Database) -> list[Self]:
         query = sql.QSqlQuery(database.connection)
-        query.prepare(f"SELECT * FROM {view_mapping[cls]}")
+        query.prepare(f"SELECT * FROM {cls.table_name()}")
         if not query.exec():
             raise DatabaseTransactionError(
-                f"Could not collect data from table {view_mapping[cls]}"
+                f"Could not collect data from table {cls.table_name()}"
             )
         result: list[Self] = []
         while query.next():
@@ -130,91 +126,7 @@ class ModifiableData(Data, ABC):
                 )
 
 
-@dataclass
-class AddressData(Data):
-    @staticmethod
-    def table_name() -> str:
-        return "ADRESY"
-
-    @staticmethod
-    def insert_procedure_name() -> str:
-        return "adres_insert"
-
-    @staticmethod
-    def delete_procedure_name() -> str:
-        return "adres_delete"
-
-    country: str | None = None
-    city: str | None = None
-    post_code: str | None = None
-    street: str | None = None
-    house_nr: str | None = None
-    apartment_nr: str | None = None
-
-
-@dataclass
-class ClientData(ModifiableData, ABC):
-    client_id: int | None = None
-    address: AddressData | None = None
-    email: str | None = None
-    phone_nr: str | None = None
-
-
-@dataclass
-class PersonData(ClientData):
-    @staticmethod
-    def table_name() -> str:
-        return "KLIENCI_OSOBY"
-
-    @staticmethod
-    def insert_procedure_name() -> str:
-        return "osoba_insert"
-
-    @staticmethod
-    def update_procedure_name() -> str:
-        return "osoba_update"
-
-    @staticmethod
-    def delete_procedure_name() -> str:
-        return "klient_delete"
-
-    first_name: str | None = None
-    last_name: str | None = None
-    PESEL: str | None = None
-    sex: str | None = None
-
-
-@dataclass
-class CompanyData(ClientData):
-    @staticmethod
-    def table_name() -> str:
-        return "KLIENCI_FIRMY"
-
-    @staticmethod
-    def insert_procedure_name() -> str:
-        return "firma_insert"
-
-    @staticmethod
-    def update_procedure_name() -> str:
-        return "firma_update"
-
-    @staticmethod
-    def delete_procedure_name() -> str:
-        return "klient_delete"
-
-    name: str | None = None
-    NIP: str | None = None
-
-
-view_mapping: dict[Type[Data], str] = {
-    AddressData: "ADRESY",
-    PersonData: "KLIENCI_OSOBY",
-    CompanyData: "KLIENCI_FIRMY"
-}
-
-
 attribute_mapping: dict[str, str] = {
-    "address_id": "ID_adresu",
     "country": "kraj",
     "city": "miejscowosc",
     "post_code": "kod_pocztowy",

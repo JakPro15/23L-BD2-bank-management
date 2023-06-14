@@ -3,7 +3,7 @@ from typing import Optional
 from PySide6.QtWidgets import QTableWidgetItem, QWidget
 
 from src.database.database import Database
-from src.database.datatypes import AddressData
+from src.database.table_types import AddressData
 from src.ui.dialogs.addresses_dialog import AddressesDialog
 
 # from src.ui.addresses_dialog import AddressDialog
@@ -34,7 +34,7 @@ class AddressesWidget(QWidget):
         new_row = self._ui.addresses_list.rowCount()
         self._ui.addresses_list.insertRow(new_row)
         row_entry = [
-            str(data.address_id),
+            str(0),
             data.country,
             data.city,
             data.post_code,
