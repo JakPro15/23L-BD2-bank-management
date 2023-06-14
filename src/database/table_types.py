@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from abc import ABC
 from dataclasses import dataclass
+from PySide6.QtCore import QDate
 
 from src.database.abstract_data import Data, ModifiableData
 
@@ -12,28 +13,20 @@ class AddressData(Data):
     def table_name() -> str:
         return "ADRESY"
 
-    @staticmethod
-    def insert_procedure_name() -> str:
-        return "adres_insert"
-
-    @staticmethod
-    def delete_procedure_name() -> str:
-        return "adres_delete"
-
-    country: str | None = None
-    city: str | None = None
-    post_code: str | None = None
-    street: str | None = None
-    house_nr: str | None = None
+    country: str = None
+    city: str = None
+    post_code: str = None
+    street: str = None
+    house_nr: str = None
     apartment_nr: str | None = None
 
 
 @dataclass
 class ClientData(ModifiableData, ABC):
     client_id: int | None = None
-    address: AddressData | None = None
-    email: str | None = None
-    phone_nr: str | None = None
+    address: AddressData = None
+    email: str = None
+    phone_nr: str = None
 
 
 @dataclass
@@ -54,10 +47,10 @@ class PersonData(ClientData):
     def delete_procedure_name() -> str:
         return "klient_delete"
 
-    first_name: str | None = None
-    last_name: str | None = None
-    PESEL: str | None = None
-    sex: str | None = None
+    first_name: str = None
+    last_name: str = None
+    PESEL: str = None
+    sex: str = None
 
 
 @dataclass
@@ -78,5 +71,49 @@ class CompanyData(ClientData):
     def delete_procedure_name() -> str:
         return "klient_delete"
 
-    name: str | None = None
-    NIP: str | None = None
+    name: str = None
+    NIP: str = None
+
+
+@dataclass
+class AccountTypeData(Data):
+    @staticmethod
+    def table_name() -> str:
+        return "TYPY_KONTA"
+
+    @staticmethod
+    def insert_procedure_name() -> str:
+        return "typ_konta_insert"
+
+    @staticmethod
+    def delete_procedure_name() -> str:
+        return "typ_konta_delete"
+
+    name: str = None
+    version: int = None
+
+
+@dataclass
+class AccountData(ModifiableData):
+    @staticmethod
+    def table_name() -> str:
+        return "KONTA_Z_TYPEM"
+
+    @staticmethod
+    def insert_procedure_name() -> str:
+        return "konto_insert"
+
+    @staticmethod
+    def update_procedure_name() -> str:
+        return "konto_update"
+
+    @staticmethod
+    def delete_procedure_name() -> str:
+        return "konto_delete"
+
+    account_id: int | None = None
+    account_nr: str = None
+    creation_date: QDate = None
+    closing_date: QDate | None = None
+    transaction_limit: float | None = None
+    account_type: AccountTypeData = None

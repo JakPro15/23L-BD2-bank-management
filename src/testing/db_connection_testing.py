@@ -10,7 +10,6 @@ from src.database.database import Database  # noqa: E402
 
 @contextmanager
 def testing_database():
-    os.system("./mysql.sh start && sleep 2; ./remake_db.sh")
-    database = Database()
-    yield database
+    os.system("./mysql.sh start > /dev/null && sleep 2; ./remake_db.sh")
+    yield Database()
     os.system("./remake_db.sh")

@@ -1,26 +1,35 @@
 USE `bd2-23L-z09`;
 
-DROP VIEW IF EXISTS KLIENCI_OSOBY, KLIENCI_FIRMY;
+DROP VIEW IF EXISTS KLIENCI_OSOBY, KLIENCI_FIRMY, KONTA_Z_TYPEM;
 DROP PROCEDURE IF EXISTS adres_insert;
-DROP PROCEDURE IF EXISTS adres_delete;
 DROP PROCEDURE IF EXISTS osoba_insert;
 DROP PROCEDURE IF EXISTS osoba_update;
 DROP PROCEDURE IF EXISTS firma_insert;
 DROP PROCEDURE IF EXISTS firma_update;
 DROP PROCEDURE IF EXISTS klient_delete;
+DROP PROCEDURE IF EXISTS typ_konta_insert;
+DROP PROCEDURE IF EXISTS konto_insert;
+DROP PROCEDURE IF EXISTS konto_update;
+DROP PROCEDURE IF EXISTS konto_delete;
 
 CREATE VIEW KLIENCI_OSOBY AS
-    SELECT ID_klienta, ID_adresu, kraj, miejscowosc, kod_pocztowy, ulica, numer_domu, numer_mieszkania,
+    SELECT ID_klienta, kraj, miejscowosc, kod_pocztowy, ulica, numer_domu, numer_mieszkania,
            email, numer_telefonu, imie, nazwisko, PESEL, plec
     FROM KLIENCI INNER JOIN ADRESY USING(ID_adresu)
     WHERE selektor = 'osoba';
 
 
 CREATE VIEW KLIENCI_FIRMY AS
-    SELECT ID_klienta, ID_adresu, kraj, miejscowosc, kod_pocztowy, ulica, numer_domu, numer_mieszkania,
+    SELECT ID_klienta, kraj, miejscowosc, kod_pocztowy, ulica, numer_domu, numer_mieszkania,
            email, numer_telefonu, nazwa, NIP
     FROM KLIENCI INNER JOIN ADRESY USING(ID_adresu)
     WHERE selektor = 'firma';
+
+
+CREATE VIEW KONTA_Z_TYPEM AS
+    SELECT ID_konta, numer_konta, data_utworzenia, data_zamkniecia,
+           IFNULL(limit_transakcji, -1.0) as limit_transakcji, nazwa, wersja
+    FROM KONTA INNER JOIN TYPY_KONTA USING(ID_typu_konta);
 
 
 DELIMITER //
@@ -82,14 +91,6 @@ BEGIN
 
     SELECT LAST_INSERT_ID()
     INTO p_id_klienta;
-END//
-
-
-CREATE TRIGGER adresy_niemodyfikowalne
-BEFORE UPDATE ON ADRESY
-FOR EACH ROW
-BEGIN
-    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Wiersze tabeli ADRESY nie powinny być modyfikowane.';
 END//
 
 
@@ -217,4 +218,100 @@ BEGIN
 
     DELETE FROM ADRESY
     WHERE ID_adresu = v_stare_id_adresu;
+END//
+
+
+CREATE PROCEDURE typ_konta_insert(
+    OUT p_id_typu_konta INT,
+    IN p_nazwa VARCHAR(50),
+    IN p_wersja INT
+)
+BEGIN
+    DECLARE v_id_typu_konta INT;
+    DECLARE CONTINUE HANDLER FOR NOT FOUND BEGIN END;
+
+    SELECT ID_typu_konta
+    INTO v_id_typu_konta
+    FROM TYPY_KONTA
+    WHERE nazwa = p_nazwa AND wersja = p_wersja;
+
+    IF v_id_typu_konta IS NULL THEN
+        INSERT INTO TYPY_KONTA VALUES (NULL, p_nazwa, p_wersja);
+        SELECT LAST_INSERT_ID()
+        INTO v_id_typu_konta;
+    END IF;
+
+    SELECT v_id_typu_konta
+    INTO p_id_typu_konta;
+END//
+
+
+CREATE PROCEDURE konto_insert(
+    OUT p_id_konta INT,
+    IN p_numer_konta CHAR(26),
+    IN p_data_utworzenia DATE,
+    IN p_data_zamkniecia DATE,
+    IN p_limit_transakcji DECIMAL(40, 20),
+    IN p_nazwa_typu_konta VARCHAR(50),
+    IN p_wersja_typu_konta INT
+)
+BEGIN
+    DECLARE v_id_typu_konta INT;
+
+    CALL typ_konta_insert(v_id_typu_konta, p_nazwa_typu_konta, p_wersja_typu_konta);
+
+    INSERT INTO KONTA VALUES(NULL, p_numer_konta, p_data_utworzenia,
+                             p_data_zamkniecia, p_limit_transakcji, v_id_typu_konta);
+
+    SELECT LAST_INSERT_ID()
+    INTO p_id_konta;
+END//
+
+
+CREATE PROCEDURE konto_update(
+    IN p_id_konta INT,
+    IN p_numer_konta CHAR(26),
+    IN p_data_utworzenia DATE,
+    IN p_data_zamkniecia DATE,
+    IN p_limit_transakcji DECIMAL(40, 20),
+    IN p_nazwa_typu_konta VARCHAR(50),
+    IN p_wersja_typu_konta INT
+)
+BEGIN
+    DECLARE v_stare_id_typu_konta INT;
+    DECLARE v_id_typu_konta INT;
+    DECLARE CONTINUE HANDLER FOR 1451 BEGIN END;
+
+    SELECT ID_typu_konta
+    INTO v_stare_id_typu_konta
+    FROM KONTA
+    WHERE ID_konta = p_id_konta;
+
+    CALL typ_konta_insert(v_id_typu_konta, p_nazwa_typu_konta, p_wersja_typu_konta);
+
+    UPDATE KONTA
+    SET numer_konta = p_numer_konta, data_utworzenia = p_data_utworzenia, data_zamkniecia = p_data_zamkniecia,
+        limit_transakcji = p_limit_transakcji, ID_typu_konta = v_id_typu_konta
+    WHERE ID_konta = p_id_konta;
+
+    DELETE FROM TYPY_KONTA
+    WHERE ID_typu_konta = v_stare_id_typu_konta;
+END//
+
+
+CREATE PROCEDURE konto_delete(IN p_id_konta INT)
+BEGIN
+    DECLARE v_stare_id_typu_konta INT;
+    DECLARE CONTINUE HANDLER FOR 1451 BEGIN END;
+
+    SELECT ID_typu_konta
+    INTO v_stare_id_typu_konta
+    FROM KONTA
+    WHERE ID_konta = p_id_konta;
+
+    DELETE FROM KONTA
+    WHERE ID_konta = p_id_konta;
+
+    DELETE FROM TYPY_KONTA
+    WHERE ID_typu_konta = v_stare_id_typu_konta;
 END//
