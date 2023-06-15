@@ -29,6 +29,7 @@ if __name__ == "__main__":
 
         while True:
             if not line:
+                print_line()
                 break
 
             while line[:2] == "--":
@@ -104,4 +105,8 @@ if __name__ == "__main__":
                 if count == 2:
                     print_line()
                     count = 0
+                    input()
+                    print("\033c")
+                elif count == 1:
+                    print("\033[2A")
                     input()
