@@ -277,7 +277,7 @@ BEGIN
     WHERE ID_konta = p_ID_odbiorcy AND skrot_nazwy_waluty = p_skrot_nazwy_waluty;
 
     INSERT INTO TRANSAKCJE VALUES (
-        NULL, v_saldo_nadawcy, v_saldo_nadawcy - p_kwota_do_przelania,
+        NULL, p_kwota_do_przelania, p_kwota_do_przelania,
         (CURRENT_DATE), p_tytul, p_adres_odbiorcy,
         p_ID_nadawcy, p_skrot_nazwy_waluty,
         p_ID_odbiorcy, p_skrot_nazwy_waluty,
