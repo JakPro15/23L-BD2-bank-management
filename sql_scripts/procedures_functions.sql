@@ -223,6 +223,81 @@ BEGIN
     END IF;
 END//
 
+-- Procedura wykonująca przewalutowanie
+CREATE PROCEDURE wykonaj_przewalutowanie(
+    IN p_ID_konta INT,
+    IN p_skrot_waluty_z CHAR(3),
+    IN p_skrot_waluty_do CHAR(3),
+    IN p_kwota_do_przewalutowania DECIMAL(40, 20)
+)
+BEGIN
+    DECLARE v_kurs_z DECIMAL(40, 20);
+    DECLARE v_kurs_do DECIMAL(40, 20);
+    DECLARE v_kwota_przewalutowana DECIMAL(40, 20);
+    DECLARE v_saldo_z DECIMAL(40, 20);
+    DECLARE v_saldo_do DECIMAL(40, 20);
+
+    DECLARE CONTINUE HANDLER FOR NOT FOUND
+    BEGIN
+        IF v_saldo_z IS NULL
+        THEN
+            SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Nadawca nie posiada salda w walucie do przewalutowania';
+        END IF;
+        
+        IF v_saldo_do IS NULL
+        THEN
+            INSERT INTO SALDA VALUES (
+                p_ID_konta, p_skrot_waluty_do, 0
+            );
+            SET v_saldo_do = 0;
+        END IF;
+    END;
+
+    SELECT kurs_wymiany_na_PLN
+    INTO v_kurs_z
+    FROM WALUTY
+    WHERE skrot_nazwy_waluty = p_skrot_waluty_z;
+
+    SELECT kurs_wymiany_na_PLN
+    INTO v_kurs_do
+    FROM WALUTY
+    WHERE skrot_nazwy_waluty = p_skrot_waluty_do;
+
+    SELECT obecne_saldo
+    INTO v_saldo_z
+    FROM SALDA
+    WHERE ID_konta = p_ID_konta AND skrot_nazwy_waluty = p_skrot_waluty_z;
+
+    SELECT obecne_saldo
+    INTO v_saldo_do
+    FROM SALDA
+    WHERE ID_konta = p_ID_konta AND skrot_nazwy_waluty = p_skrot_waluty_do;
+
+    IF v_saldo_z < p_kwota_do_przewalutowania
+    THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Nadawca ma zbyt mało środków w walucie do przewalutowania';
+    END IF;
+
+    SET v_kwota_przewalutowana = p_kwota_do_przewalutowania * v_kurs_z / v_kurs_do;
+
+    UPDATE SALDA
+    SET obecne_saldo = v_saldo_z - p_kwota_do_przewalutowania
+    WHERE ID_konta = p_ID_konta AND skrot_nazwy_waluty = p_skrot_waluty_z;
+
+    UPDATE SALDA
+    SET obecne_saldo = v_saldo_do + v_kwota_przewalutowana
+    WHERE ID_konta = p_ID_konta AND skrot_nazwy_waluty = p_skrot_waluty_do;
+
+    INSERT INTO TRANSAKCJE VALUES (
+        NULL, p_kwota_do_przewalutowania, v_kwota_przewalutowana,
+        (CURRENT_DATE), 'Przewalutowanie', NULL,
+        p_ID_konta, p_skrot_waluty_z,
+        p_ID_konta, p_skrot_waluty_do,
+        NULL
+    );
+
+END//
+
 
 -- Procedura wykonująca przelew wewnętrzny
 CREATE PROCEDURE wykonaj_przelew_wewnetrzny(

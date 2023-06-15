@@ -19,6 +19,7 @@ DROP PROCEDURE IF EXISTS zaloz_lokate;
 DROP PROCEDURE IF EXISTS splac_pozyczke;
 DROP PROCEDURE IF EXISTS wez_pozyczke;
 DROP PROCEDURE IF EXISTS sprawdz_pozyczke_na_karte;
+DROP PROCEDURE IF EXISTS wykonaj_przewalutowanie;
 DROP PROCEDURE IF EXISTS wykonaj_przelew_wewnetrzny;
 DROP PROCEDURE IF EXISTS wykonaj_przelew_zewnetrzny;
 

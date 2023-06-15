@@ -105,9 +105,61 @@ CALL wyciagnij_z_lokaty(100, 5);
 -- Kończy się niepowodzeniem i zasygnalizowaną informacją.
 
 
+-- Poniżej jest demonstracja działania procedury wykonaj_przewalutowanie
+-- Stan sald klienta przed przewalutowaniem
+SELECT *
+FROM SALDA
+WHERE ID_konta = 1 AND skrot_nazwy_waluty IN ('PLN', 'JPY');
+
+-- Kurs jena japońskiego
+SELECT kurs_wymiany_na_PLN
+FROM WALUTY
+WHERE skrot_nazwy_waluty = 'JPY';
+
+-- Dokonujemy przewalutowania 1000 zł na jeny japońskie
+CALL wykonaj_przewalutowanie(1, 'PLN', 'JPY', 1000);
+
+-- Stany sald się zmieniły odpowiednio do kursu
+SELECT *
+FROM SALDA
+WHERE ID_konta = 1 AND skrot_nazwy_waluty IN ('PLN', 'JPY');
+
+-- Przypadek gdy klient nie posiada salda w walucie wychodzącej
+SELECT *
+FROM SALDA
+WHERE ID_konta = 1 AND skrot_nazwy_waluty = 'EUR';
+-- Zapytanie nie znajduje wierszy
+
+-- Próbujemy dokonać przewalutowania
+CALL wykonaj_przewalutowanie(1, 'EUR', 'JPY', 1000);
+-- Kończy się to niepowodzeniem
+
+-- Przypadek gdy klient nie posiada salda w walucie docelowej
+SELECT *
+FROM SALDA
+WHERE ID_konta = 1 AND skrot_nazwy_waluty IN ('PLN', 'EUR');
+
+-- Dokonujemy przewalutowania 1000 zł na euro
+CALL wykonaj_przewalutowanie(1, 'PLN', 'EUR', 1000);
+
+-- Powstało nowe saldo w docelowej walucie
+SELECT *
+FROM SALDA
+WHERE ID_konta = 1 AND skrot_nazwy_waluty IN ('PLN', 'EUR');
+
+-- Przypadek gdy klient nie posiada wystarczająco środków w danej walucie by dokonać przewalutowania
+SELECT *
+FROM SALDA
+WHERE ID_konta = 1;
+
+-- Próbujemy dokonać przewalutowania 1000 euro na jeny japońskie
+CALL wykonaj_przewalutowanie(1, 'EUR', 'JPY', 1000);
+-- Kończy się to niepowodzeniem
+
+
 -- Poniżej jest demonstracja działania procedury wykonaj_przelew_wewnetrzny
 -- Stan kont nadawcy i odbiorcy przed dokonaniem przelewu
-SELECT ID_konta, skrot_nazwy_waluty, obecne_saldo
+SELECT *
 FROM SALDA
 WHERE ID_konta IN (1, 2) AND skrot_nazwy_waluty = 'PLN';
 
@@ -115,7 +167,7 @@ WHERE ID_konta IN (1, 2) AND skrot_nazwy_waluty = 'PLN';
 CALL wykonaj_przelew_wewnetrzny(1, 2, 1000, 'PLN', 'Przelew od 1 do 2', NULL);
 
 -- Stan konta klienta 1 zmalał a klienta 2 wzrósł odpowiednio
-SELECT ID_konta, skrot_nazwy_waluty, obecne_saldo
+SELECT *
 FROM SALDA
 WHERE ID_konta IN (1, 2) AND skrot_nazwy_waluty = 'PLN';
 
@@ -126,7 +178,7 @@ ORDER BY data_transakcji DESC
 LIMIT 1;
 
 -- Przypadek gdy odbiorca nie posiada salda w walucie przelewu
-SELECT ID_konta, skrot_nazwy_waluty, obecne_saldo
+SELECT *
 FROM SALDA
 WHERE ID_konta IN (3, 2) AND skrot_nazwy_waluty = 'EUR';
 -- Jak widzimy klient 2 nie posiada salda euro
@@ -135,12 +187,12 @@ WHERE ID_konta IN (3, 2) AND skrot_nazwy_waluty = 'EUR';
 CALL wykonaj_przelew_wewnetrzny(3, 2, 100, 'EUR', 'Przelew od 3 do 2', NULL);
 
 -- Po przelewie powstało saldo klienta 2 zawierające przesłane euro
-SELECT ID_konta, skrot_nazwy_waluty, obecne_saldo
+SELECT *
 FROM SALDA
 WHERE ID_konta IN (3, 2) AND skrot_nazwy_waluty = 'EUR';
 
 -- Przypadek gdy nadawcy nie stać na przelew
-SELECT ID_konta, skrot_nazwy_waluty, obecne_saldo
+SELECT *
 FROM SALDA
 WHERE ID_konta = 1 AND skrot_nazwy_waluty = 'PLN';
 
@@ -151,7 +203,7 @@ CALL wykonaj_przelew_wewnetrzny(1, 2, 100000, 'PLN', 'Przelew od 1 do 2', NULL);
 
 -- Poniżej jest demonstracja działania procedury wykonaj_przelew_zewnetrzny
 -- Stan konta nadawcy przed dokonaniem przelewu
-SELECT ID_konta, skrot_nazwy_waluty, obecne_saldo
+SELECT *
 FROM SALDA
 WHERE ID_konta = 1 AND skrot_nazwy_waluty = 'PLN';
 
@@ -159,7 +211,7 @@ WHERE ID_konta = 1 AND skrot_nazwy_waluty = 'PLN';
 CALL wykonaj_przelew_zewnetrzny(1, '11101025890123456789123456', 1, 1000, 'PLN', 'Przelew od 1', NULL);
 
 -- Stan konta klienta 1 zmalał
-SELECT ID_konta, skrot_nazwy_waluty, obecne_saldo
+SELECT *
 FROM SALDA
 WHERE ID_konta = 1 AND skrot_nazwy_waluty = 'PLN';
 
@@ -170,7 +222,7 @@ ORDER BY data_transakcji DESC
 LIMIT 1;
 
 -- Przypadek gdy nadawcy nie stać na przelew
-SELECT ID_konta, skrot_nazwy_waluty, obecne_saldo
+SELECT *
 FROM SALDA
 WHERE ID_konta = 1 AND skrot_nazwy_waluty = 'PLN';
 
