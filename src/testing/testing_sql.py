@@ -26,6 +26,7 @@ if __name__ == "__main__":
         count = 0
 
         line = script.readline()
+        print("\033c")
 
         while True:
             if not line:
@@ -67,7 +68,7 @@ if __name__ == "__main__":
                 out, _ = mysql.communicate(command.encode())
                 if(len(out) > 0):
                     result_lines = out.decode().split('\n')[:-1]
-                    result_lines = [re.sub(r"(\.\d*?)0+", lambda matched: matched.group(1), line) for line in result_lines]
+                    result_lines = [re.sub(r"(\.\d*?)0+([^\d]|$)", lambda matched: matched.group(1) + matched.group(2), line) for line in result_lines]
                     result_lines = [re.sub(r"\.([^\d]|$)", lambda matched: matched.group(1), line) for line in result_lines]
                     result_words = [line.split('\t') for line in result_lines]
                     max_lens = [0 for _ in result_words[0]]
