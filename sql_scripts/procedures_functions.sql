@@ -285,6 +285,68 @@ BEGIN
     );
 END//
 
+-- Procedura wykonująca przelew zewnetrzny
+CREATE PROCEDURE wykonaj_przelew_zewnetrzny(
+    IN p_ID_nadawcy INT,
+    IN p_numer_konta CHAR(26),
+    IN p_ID_banku INT,
+    IN p_kwota_do_przelania DECIMAL(40, 20),
+    IN p_skrot_nazwy_waluty CHAR(3),
+    IN p_tytul VARCHAR(50),
+    IN p_adres_odbiorcy VARCHAR(100)
+)
+BEGIN
+    DECLARE v_saldo_nadawcy DECIMAL(40, 20);
+    DECLARE v_ID_odbiorcy INT;
+
+    DECLARE CONTINUE HANDLER FOR NOT FOUND
+    BEGIN
+        IF v_saldo_nadawcy IS NULL
+        THEN
+            SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Nadawca nie posiada salda w podanej walucie';
+        END IF;
+
+        IF v_ID_odbiorcy IS NULL
+        THEN
+            INSERT INTO KONTA_ZEWNETRZNE VALUES (
+                NULL, p_numer_konta, p_ID_banku
+            );
+
+            SELECT ID_konta_zewnetrznego
+            INTO v_ID_odbiorcy
+            FROM KONTA_ZEWNETRZNE
+            WHERE numer_konta = p_numer_konta AND ID_banku = p_ID_banku;
+        END IF;
+    END;
+
+    SELECT obecne_saldo
+    INTO v_saldo_nadawcy
+    FROM SALDA
+    WHERE ID_konta = p_ID_nadawcy AND skrot_nazwy_waluty = p_skrot_nazwy_waluty;
+
+    IF v_saldo_nadawcy < p_kwota_do_przelania
+    THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Nadawcy nie stać na przelew';
+    END IF;
+
+    SELECT ID_konta_zewnetrznego
+    INTO v_ID_odbiorcy
+    FROM KONTA_ZEWNETRZNE
+    WHERE numer_konta = p_numer_konta AND ID_banku = p_ID_banku;
+
+    UPDATE SALDA
+    SET obecne_saldo = v_saldo_nadawcy - p_kwota_do_przelania
+    WHERE ID_konta = p_ID_nadawcy AND skrot_nazwy_waluty = p_skrot_nazwy_waluty;
+
+    INSERT INTO TRANSAKCJE VALUES (
+        NULL, p_kwota_do_przelania, p_kwota_do_przelania,
+        (CURRENT_DATE), p_tytul, p_adres_odbiorcy,
+        p_ID_nadawcy, p_skrot_nazwy_waluty,
+        NULL, NULL,
+        v_ID_odbiorcy
+    );
+END//
+
 
 -- Funkcja oblicza ogólne saldo w PLN wszystkich kont klienta, wliczając pożyczki i lokaty.
 CREATE FUNCTION policz_calkowite_saldo(p_ID_klienta INT)

@@ -65,7 +65,7 @@ WHERE ID_konta = 10;
 -- Zakładamy lokatę:
 CALL zaloz_lokate(3000, '2025-05-05', 3 / 100, 10, 'PLN');
 
--- Tlość pieniędzy na koncie zmalała.
+-- Ilość pieniędzy na koncie zmalała.
 SELECT ID_konta, skrot_nazwy_waluty, obecne_saldo
 FROM SALDA
 WHERE ID_konta = 10;
@@ -147,6 +147,50 @@ WHERE ID_konta = 1 AND skrot_nazwy_waluty = 'PLN';
 -- Próbujemy dokonać przelewu 100000 zł
 CALL wykonaj_przelew_wewnetrzny(1, 2, 100000, 'PLN', 'Przelew od 1 do 2', NULL);
 -- Kończy się to niepowodzeniem
+
+
+-- Poniżej jest demonstracja działania procedury wykonaj_przelew_zewnetrzny
+-- Stan konta nadawcy przed dokonaniem przelewu
+SELECT ID_konta, skrot_nazwy_waluty, obecne_saldo
+FROM SALDA
+WHERE ID_konta = 1 AND skrot_nazwy_waluty = 'PLN';
+
+-- Dokonujemy przelewu 1000 zł od klienta 1 na konto bankowe 11101025890123456789123456 w banku o id 1
+CALL wykonaj_przelew_zewnetrzny(1, '11101025890123456789123456', 1, 1000, 'PLN', 'Przelew od 1', NULL);
+
+-- Stan konta klienta 1 zmalał
+SELECT ID_konta, skrot_nazwy_waluty, obecne_saldo
+FROM SALDA
+WHERE ID_konta = 1 AND skrot_nazwy_waluty = 'PLN';
+
+-- W tabeli transakcji pojawił się wpis dotyczący tego przelewu
+SELECT *
+FROM TRANSAKCJE
+ORDER BY data_transakcji DESC
+LIMIT 1;
+
+-- Przypadek gdy nadawcy nie stać na przelew
+SELECT ID_konta, skrot_nazwy_waluty, obecne_saldo
+FROM SALDA
+WHERE ID_konta = 1 AND skrot_nazwy_waluty = 'PLN';
+
+-- Próbujemy dokonać przelewu 100000 zł
+CALL wykonaj_przelew_zewnetrzny(1, '11101025890123456789123456', 1, 100000, 'PLN', 'Przelew od 1', NULL);
+-- Kończy się to niepowodzeniem
+
+-- Przypadek gdy odbiorca nie występuje w bazie danych
+SELECT *
+FROM KONTA_ZEWNETRZNE
+WHERE numer_konta = '11101025890123456789123469';
+-- Zapytanie nie zwraca żadnych wierszy
+
+-- Dokonujemy przelewu 1000 zł
+CALL wykonaj_przelew_zewnetrzny(1, '11101025890123456789123469', 1, 1000, 'PLN', 'Przelew od 1', NULL);
+
+-- Dane o koncie zewnętrznym pojawiły się w bazie danych
+SELECT *
+FROM KONTA_ZEWNETRZNE
+WHERE numer_konta = '11101025890123456789123469';
 
 
 -- Zapytanie demonstruje działanie funkcji policz_calkowite_saldo.
