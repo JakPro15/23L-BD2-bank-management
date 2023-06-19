@@ -164,3 +164,100 @@ class AccountData(ModifiableData):
             else:
                 result.append(CompanyData.from_query(query))
         return result
+    
+@dataclass
+class BankData(Data):
+    @staticmethod
+    def table_name() -> str:
+        return "BANKI"
+
+    bank_id: int = None
+    name: str = None
+    NIP: str = None
+    address: AddressData = None
+
+@dataclass
+class OutsideAccountData(Data):
+    @staticmethod
+    def table_name() -> str:
+        return "KONTA_ZEWNETRZNE"
+
+    outside_account_id: int = None
+    account_nr: str = None
+    bank: BankData = None
+
+@dataclass
+class TransactionData(Data, ABC):
+    transaction_id: int = None
+    sum_before: float = None
+    sum_after: float = None
+    transaction_date: QDate = None
+    title: str = None
+    receiver_adress: str | None = None
+    account_1_id: int = None
+    short_currency_1: str = None
+
+    def account_from(self, database: Database) -> AccountData:
+        query = sql.QSqlQuery(database.connection)
+        query.prepare(
+            "SELECT * FROM SALDA_KONTA_WEWNETRZNE WHERE "
+            "ID_konta = :account_1_id AND skrot_nazwy_waluty = :short_currency_1"
+            )
+        query.bindValue(":account_1_id", self.account_1_id)
+        query.bindValue(":short_currency_1", self.short_currency_1)
+        if not query.exec():
+            raise DatabaseTransactionError(
+                "Could not collect data from table SALDA_KONTA_WEWNETRZNE"
+            )
+        if query.next():
+            result = AccountData.from_query(query)
+        return result
+
+@dataclass
+class TransactionInsideData(TransactionData):
+    @staticmethod
+    def table_name() -> str:
+        return "TRANSAKCJE_WEWNETRZNE"
+
+    account_2_id: int = None
+    short_currency_2: str = None
+    
+    def account_to(self, database: Database) -> AccountData:
+        query = sql.QSqlQuery(database.connection)
+        query.prepare(
+            "SELECT * FROM SALDA_KONTA_WEWNETRZNE WHERE "
+            "ID_konta = :account_2_id AND skrot_nazwy_waluty = :short_currency_2"
+            )
+        query.bindValue(":account_2_id", self.account_2_id)
+        query.bindValue(":short_currency_2", self.short_currency_2)
+        if not query.exec():
+            raise DatabaseTransactionError(
+                "Could not collect data from table SALDA_KONTA_WEWNETRZNE"
+            )
+        if query.next():
+            result = AccountData.from_query(query)
+        return result
+
+
+@dataclass
+class TransactionOutsideData(TransactionData):
+    @staticmethod
+    def table_name() -> str:
+        return "TRANSAKCJE_ZEWNETRZNE"
+    
+    outside_account_id: int = None
+
+    def account_to(self, database: Database) -> OutsideAccountData:
+        query = sql.QSqlQuery(database.connection)
+        query.prepare(
+            "SELECT * FROM SALDA_KONTA_ZEWNETRZNE WHERE "
+            "ID_konta_zewnetrznego = :outside_account_id"
+            )
+        query.bindValue(":outside_account_id", self.outside_account_id)
+        if not query.exec():
+            raise DatabaseTransactionError(
+                "Could not collect data from table SALDA_KONTA_ZEWNETRZNE"
+            )
+        if query.next():
+            result = OutsideAccountData.from_query(query)
+        return result

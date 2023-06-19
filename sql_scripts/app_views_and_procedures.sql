@@ -1,7 +1,8 @@
 USE `bd2-23L-z09`;
 
 DROP VIEW IF EXISTS KLIENCI_OSOBY, KLIENCI_FIRMY, KONTA_Z_TYPEM,
-    KONTA_KLIENTOW, WLASCICIELE_KONT;
+    KONTA_KLIENTOW, WLASCICIELE_KONT, TRANSAKCJE_WEWNETRZNE,
+    TRANSAKCJE_ZEWNETRZNE, SALDA_KONTA_WEWNETRZNE, SALDA_KONTA_ZEWNETRZNE;
 DROP PROCEDURE IF EXISTS adres_insert;
 DROP PROCEDURE IF EXISTS osoba_insert;
 DROP PROCEDURE IF EXISTS osoba_update;
@@ -46,6 +47,36 @@ CREATE VIEW WLASCICIELE_KONT AS
            email, numer_telefonu, selektor, imie, nazwisko, PESEL, plec, nazwa, NIP
     FROM PRZYNALEZNOSCI_KONT
     INNER JOIN KLIENCI USING(ID_klienta)
+    INNER JOIN ADRESY USING(ID_adresu);
+
+
+CREATE VIEW TRANSAKCJE_WEWNETRZNE AS
+    SELECT ID_transakcji, kwota_przed, kwota_po, data_transakcji, tytul, adres_odbiorcy,
+           ID_konta_1, skrot_nazwy_waluty_1, ID_konta_2, skrot_nazwy_waluty_2
+    FROM TRANSAKCJE
+    WHERE ID_konta_zewnetrznego IS NULL;
+
+
+CREATE VIEW TRANSAKCJE_ZEWNETRZNE AS
+    SELECT ID_transakcji, kwota_przed, kwota_po, data_transakcji, tytul, adres_odbiorcy,
+           ID_konta_1, skrot_nazwy_waluty_1, ID_konta_zewnetrznego
+    FROM TRANSAKCJE
+    WHERE ID_konta_2 IS NULL;
+
+
+CREATE VIEW SALDA_KONTA_WEWNETRZNE AS
+    SELECT ID_konta, skrot_nazwy_waluty, numer_konta, data_utworzenia, data_zamkniecia,
+           IFNULL(limit_transakcji, -1.0) as limit_transakcji, nazwa, wersja
+    FROM SALDA
+    INNER JOIN KONTA USING (ID_konta)
+    INNER JOIN TYPY_KONTA USING(ID_typu_konta);
+
+
+CREATE VIEW SALDA_KONTA_ZEWNETRZNE AS
+    SELECT ID_konta_zewnetrznego, numer_konta, ID_banku, nazwa, NIP,
+           kraj, miejscowosc, kod_pocztowy, ulica, numer_domu, numer_mieszkania
+    FROM KONTA_ZEWNETRZNE
+    INNER JOIN BANKI USING(ID_banku)
     INNER JOIN ADRESY USING(ID_adresu);
 
 
