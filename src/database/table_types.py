@@ -17,7 +17,6 @@ class AddressData(Data):
     def table_name() -> str:
         return "ADRESY"
 
-    address_id: int | None = None
     country: str = None
     city: str = None
     post_code: str = None
@@ -118,6 +117,9 @@ class AccountTypeData(Data):
 
     name: str = None
     version: int = None
+
+    def __str__(self) -> str:
+        return f"{self.version} v.{self.name}"
 
 
 @dataclass

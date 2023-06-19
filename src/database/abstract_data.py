@@ -151,7 +151,6 @@ class ModifiableData(Data, ABC):
 
 
 attribute_mapping: dict[str, str] = {
-    "address_id": "ID_adresu",
     "country": "kraj",
     "city": "miejscowosc",
     "post_code": "kod_pocztowy",

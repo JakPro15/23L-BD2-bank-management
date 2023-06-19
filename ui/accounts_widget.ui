@@ -41,7 +41,7 @@
       <bool>true</bool>
      </property>
      <property name="columnCount">
-      <number>4</number>
+      <number>5</number>
      </property>
      <attribute name="horizontalHeaderVisible">
       <bool>true</bool>
@@ -76,12 +76,17 @@
      </column>
      <column>
       <property name="text">
-       <string>Expiration date</string>
+       <string>Closing date</string>
       </property>
      </column>
      <column>
       <property name="text">
        <string>Transaction limit</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Account type</string>
       </property>
      </column>
     </widget>
@@ -130,6 +135,16 @@
         </size>
        </property>
       </spacer>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
+       <property name="text">
+        <string>Delete account</string>
+       </property>
+      </widget>
      </item>
      <item>
       <widget class="QPushButton" name="account_info_button">

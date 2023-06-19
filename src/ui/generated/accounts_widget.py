@@ -28,8 +28,8 @@ class Ui_AccountsWidget(object):
         self.horizontalLayout = QHBoxLayout(AccountsWidget)
         self.horizontalLayout.setObjectName(u"horizontalLayout")
         self.account_list = QTableWidget(AccountsWidget)
-        if (self.account_list.columnCount() < 4):
-            self.account_list.setColumnCount(4)
+        if (self.account_list.columnCount() < 5):
+            self.account_list.setColumnCount(5)
         __qtablewidgetitem = QTableWidgetItem()
         self.account_list.setHorizontalHeaderItem(0, __qtablewidgetitem)
         __qtablewidgetitem1 = QTableWidgetItem()
@@ -38,6 +38,8 @@ class Ui_AccountsWidget(object):
         self.account_list.setHorizontalHeaderItem(2, __qtablewidgetitem2)
         __qtablewidgetitem3 = QTableWidgetItem()
         self.account_list.setHorizontalHeaderItem(3, __qtablewidgetitem3)
+        __qtablewidgetitem4 = QTableWidgetItem()
+        self.account_list.setHorizontalHeaderItem(4, __qtablewidgetitem4)
         self.account_list.setObjectName(u"account_list")
         self.account_list.setSizeAdjustPolicy(QAbstractScrollArea.AdjustToContents)
         self.account_list.setAutoScroll(False)
@@ -47,7 +49,7 @@ class Ui_AccountsWidget(object):
         self.account_list.setSelectionMode(QAbstractItemView.SingleSelection)
         self.account_list.setSelectionBehavior(QAbstractItemView.SelectRows)
         self.account_list.setSortingEnabled(True)
-        self.account_list.setColumnCount(4)
+        self.account_list.setColumnCount(5)
         self.account_list.horizontalHeader().setVisible(True)
         self.account_list.horizontalHeader().setCascadingSectionResizes(False)
         self.account_list.horizontalHeader().setDefaultSectionSize(143)
@@ -80,6 +82,12 @@ class Ui_AccountsWidget(object):
 
         self.options_section.addItem(self.options_spacer)
 
+        self.pushButton = QPushButton(AccountsWidget)
+        self.pushButton.setObjectName(u"pushButton")
+        self.pushButton.setEnabled(False)
+
+        self.options_section.addWidget(self.pushButton)
+
         self.account_info_button = QPushButton(AccountsWidget)
         self.account_info_button.setObjectName(u"account_info_button")
         self.account_info_button.setEnabled(False)
@@ -102,11 +110,14 @@ class Ui_AccountsWidget(object):
         ___qtablewidgetitem1 = self.account_list.horizontalHeaderItem(1)
         ___qtablewidgetitem1.setText(QCoreApplication.translate("AccountsWidget", u"Creation date", None));
         ___qtablewidgetitem2 = self.account_list.horizontalHeaderItem(2)
-        ___qtablewidgetitem2.setText(QCoreApplication.translate("AccountsWidget", u"Expiration date", None));
+        ___qtablewidgetitem2.setText(QCoreApplication.translate("AccountsWidget", u"Closing date", None));
         ___qtablewidgetitem3 = self.account_list.horizontalHeaderItem(3)
         ___qtablewidgetitem3.setText(QCoreApplication.translate("AccountsWidget", u"Transaction limit", None));
+        ___qtablewidgetitem4 = self.account_list.horizontalHeaderItem(4)
+        ___qtablewidgetitem4.setText(QCoreApplication.translate("AccountsWidget", u"Account type", None));
         self.options_label.setText(QCoreApplication.translate("AccountsWidget", u"Options", None))
         self.add_account_button.setText(QCoreApplication.translate("AccountsWidget", u"Add account...", None))
+        self.pushButton.setText(QCoreApplication.translate("AccountsWidget", u"Delete account", None))
         self.account_info_button.setText(QCoreApplication.translate("AccountsWidget", u"Detailed account info...", None))
     # retranslateUi
 

@@ -61,12 +61,7 @@
          </attribute>
          <column>
           <property name="text">
-           <string>ID</string>
-          </property>
-         </column>
-         <column>
-          <property name="text">
-           <string>Address ID</string>
+           <string>Address</string>
           </property>
          </column>
          <column>
@@ -151,12 +146,7 @@
          </attribute>
          <column>
           <property name="text">
-           <string>ID</string>
-          </property>
-         </column>
-         <column>
-          <property name="text">
-           <string>Address ID</string>
+           <string>Address</string>
           </property>
          </column>
          <column>
@@ -273,6 +263,16 @@
         </size>
        </property>
       </spacer>
+     </item>
+     <item>
+      <widget class="QPushButton" name="delete_button">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
+       <property name="text">
+        <string>Delete client</string>
+       </property>
+      </widget>
      </item>
      <item>
       <widget class="QPushButton" name="account_info_button">

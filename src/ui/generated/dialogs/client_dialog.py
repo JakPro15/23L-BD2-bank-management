@@ -24,7 +24,7 @@ class Ui_ClientDialog(object):
     def setupUi(self, ClientDialog):
         if not ClientDialog.objectName():
             ClientDialog.setObjectName(u"ClientDialog")
-        ClientDialog.resize(400, 300)
+        ClientDialog.resize(400, 450)
         sizePolicy = QSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -35,76 +35,115 @@ class Ui_ClientDialog(object):
         self.main_section = QFormLayout()
         self.main_section.setObjectName(u"main_section")
         self.main_section.setLabelAlignment(Qt.AlignCenter)
+        self.country_label = QLabel(ClientDialog)
+        self.country_label.setObjectName(u"country_label")
+        self.country_label.setMinimumSize(QSize(120, 0))
+        self.country_label.setAlignment(Qt.AlignCenter)
+
+        self.main_section.setWidget(0, QFormLayout.LabelRole, self.country_label)
+
+        self.city_label = QLabel(ClientDialog)
+        self.city_label.setObjectName(u"city_label")
+        self.city_label.setMinimumSize(QSize(120, 0))
+        self.city_label.setAlignment(Qt.AlignCenter)
+
+        self.main_section.setWidget(1, QFormLayout.LabelRole, self.city_label)
+
+        self.postcode_label = QLabel(ClientDialog)
+        self.postcode_label.setObjectName(u"postcode_label")
+        self.postcode_label.setMinimumSize(QSize(120, 0))
+        self.postcode_label.setAlignment(Qt.AlignCenter)
+
+        self.main_section.setWidget(2, QFormLayout.LabelRole, self.postcode_label)
+
+        self.street_label = QLabel(ClientDialog)
+        self.street_label.setObjectName(u"street_label")
+        self.street_label.setMinimumSize(QSize(120, 0))
+        self.street_label.setAlignment(Qt.AlignCenter)
+
+        self.main_section.setWidget(3, QFormLayout.LabelRole, self.street_label)
+
+        self.house_label = QLabel(ClientDialog)
+        self.house_label.setObjectName(u"house_label")
+        self.house_label.setMinimumSize(QSize(120, 0))
+        self.house_label.setAlignment(Qt.AlignCenter)
+
+        self.main_section.setWidget(4, QFormLayout.LabelRole, self.house_label)
+
+        self.apartment_label = QLabel(ClientDialog)
+        self.apartment_label.setObjectName(u"apartment_label")
+        self.apartment_label.setMinimumSize(QSize(120, 0))
+        self.apartment_label.setAlignment(Qt.AlignCenter)
+
+        self.main_section.setWidget(5, QFormLayout.LabelRole, self.apartment_label)
+
         self.email_label = QLabel(ClientDialog)
         self.email_label.setObjectName(u"email_label")
-        self.email_label.setMinimumSize(QSize(96, 0))
+        self.email_label.setMinimumSize(QSize(120, 0))
         self.email_label.setAlignment(Qt.AlignCenter)
 
-        self.main_section.setWidget(2, QFormLayout.LabelRole, self.email_label)
+        self.main_section.setWidget(6, QFormLayout.LabelRole, self.email_label)
 
         self.email_line_edit = QLineEdit(ClientDialog)
         self.email_line_edit.setObjectName(u"email_line_edit")
 
-        self.main_section.setWidget(2, QFormLayout.FieldRole, self.email_line_edit)
+        self.main_section.setWidget(6, QFormLayout.FieldRole, self.email_line_edit)
 
         self.phone_label = QLabel(ClientDialog)
         self.phone_label.setObjectName(u"phone_label")
-        self.phone_label.setMinimumSize(QSize(96, 0))
+        self.phone_label.setMinimumSize(QSize(120, 0))
         self.phone_label.setAlignment(Qt.AlignCenter)
 
-        self.main_section.setWidget(3, QFormLayout.LabelRole, self.phone_label)
+        self.main_section.setWidget(7, QFormLayout.LabelRole, self.phone_label)
 
         self.phone_line_edit = QLineEdit(ClientDialog)
         self.phone_line_edit.setObjectName(u"phone_line_edit")
 
-        self.main_section.setWidget(3, QFormLayout.FieldRole, self.phone_line_edit)
+        self.main_section.setWidget(7, QFormLayout.FieldRole, self.phone_line_edit)
 
         self.selector_label = QLabel(ClientDialog)
         self.selector_label.setObjectName(u"selector_label")
-        self.selector_label.setMinimumSize(QSize(96, 0))
+        self.selector_label.setMinimumSize(QSize(120, 0))
         self.selector_label.setAlignment(Qt.AlignCenter)
 
-        self.main_section.setWidget(4, QFormLayout.LabelRole, self.selector_label)
+        self.main_section.setWidget(8, QFormLayout.LabelRole, self.selector_label)
 
         self.selector_combo_box = QComboBox(ClientDialog)
         self.selector_combo_box.addItem("")
         self.selector_combo_box.addItem("")
         self.selector_combo_box.setObjectName(u"selector_combo_box")
 
-        self.main_section.setWidget(4, QFormLayout.FieldRole, self.selector_combo_box)
+        self.main_section.setWidget(8, QFormLayout.FieldRole, self.selector_combo_box)
 
-        self.address_section = QHBoxLayout()
-        self.address_section.setObjectName(u"address_section")
-        self.address_button = QPushButton(ClientDialog)
-        self.address_button.setObjectName(u"address_button")
+        self.country_line_edit = QLineEdit(ClientDialog)
+        self.country_line_edit.setObjectName(u"country_line_edit")
 
-        self.address_section.addWidget(self.address_button)
+        self.main_section.setWidget(0, QFormLayout.FieldRole, self.country_line_edit)
 
-        self.address_spacer = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+        self.city_line_edit = QLineEdit(ClientDialog)
+        self.city_line_edit.setObjectName(u"city_line_edit")
 
-        self.address_section.addItem(self.address_spacer)
+        self.main_section.setWidget(1, QFormLayout.FieldRole, self.city_line_edit)
 
-        self.id_label = QLabel(ClientDialog)
-        self.id_label.setObjectName(u"id_label")
-        self.id_label.setEnabled(False)
+        self.postcode_line_edit = QLineEdit(ClientDialog)
+        self.postcode_line_edit.setObjectName(u"postcode_line_edit")
 
-        self.address_section.addWidget(self.id_label)
+        self.main_section.setWidget(2, QFormLayout.FieldRole, self.postcode_line_edit)
 
-        self.id_value_label = QLabel(ClientDialog)
-        self.id_value_label.setObjectName(u"id_value_label")
-        self.id_value_label.setEnabled(False)
+        self.street_line_edit = QLineEdit(ClientDialog)
+        self.street_line_edit.setObjectName(u"street_line_edit")
 
-        self.address_section.addWidget(self.id_value_label)
+        self.main_section.setWidget(3, QFormLayout.FieldRole, self.street_line_edit)
 
+        self.house_line_edit = QLineEdit(ClientDialog)
+        self.house_line_edit.setObjectName(u"house_line_edit")
 
-        self.main_section.setLayout(1, QFormLayout.FieldRole, self.address_section)
+        self.main_section.setWidget(4, QFormLayout.FieldRole, self.house_line_edit)
 
-        self.address_label = QLabel(ClientDialog)
-        self.address_label.setObjectName(u"address_label")
-        self.address_label.setMinimumSize(QSize(96, 0))
-        self.address_label.setAlignment(Qt.AlignCenter)
+        self.apartment_line_edit = QLineEdit(ClientDialog)
+        self.apartment_line_edit.setObjectName(u"apartment_line_edit")
 
-        self.main_section.setWidget(1, QFormLayout.LabelRole, self.address_label)
+        self.main_section.setWidget(5, QFormLayout.FieldRole, self.apartment_line_edit)
 
 
         self.verticalLayout.addLayout(self.main_section)
@@ -116,61 +155,61 @@ class Ui_ClientDialog(object):
         self.verticalLayout_2 = QVBoxLayout(self.person_page)
         self.verticalLayout_2.setObjectName(u"verticalLayout_2")
         self.verticalLayout_2.setContentsMargins(0, 0, 0, 0)
-        self.formLayout = QFormLayout()
-        self.formLayout.setObjectName(u"formLayout")
-        self.formLayout.setLabelAlignment(Qt.AlignCenter)
-        self.label = QLabel(self.person_page)
-        self.label.setObjectName(u"label")
-        self.label.setMinimumSize(QSize(96, 0))
-        self.label.setAlignment(Qt.AlignCenter)
+        self.person_section = QFormLayout()
+        self.person_section.setObjectName(u"person_section")
+        self.person_section.setLabelAlignment(Qt.AlignCenter)
+        self.person_name_label = QLabel(self.person_page)
+        self.person_name_label.setObjectName(u"person_name_label")
+        self.person_name_label.setMinimumSize(QSize(120, 0))
+        self.person_name_label.setAlignment(Qt.AlignCenter)
 
-        self.formLayout.setWidget(0, QFormLayout.LabelRole, self.label)
+        self.person_section.setWidget(0, QFormLayout.LabelRole, self.person_name_label)
 
-        self.label_2 = QLabel(self.person_page)
-        self.label_2.setObjectName(u"label_2")
-        self.label_2.setMinimumSize(QSize(96, 0))
-        self.label_2.setAlignment(Qt.AlignCenter)
+        self.person_surname_label = QLabel(self.person_page)
+        self.person_surname_label.setObjectName(u"person_surname_label")
+        self.person_surname_label.setMinimumSize(QSize(120, 0))
+        self.person_surname_label.setAlignment(Qt.AlignCenter)
 
-        self.formLayout.setWidget(1, QFormLayout.LabelRole, self.label_2)
+        self.person_section.setWidget(1, QFormLayout.LabelRole, self.person_surname_label)
 
-        self.label_3 = QLabel(self.person_page)
-        self.label_3.setObjectName(u"label_3")
-        self.label_3.setMinimumSize(QSize(96, 0))
-        self.label_3.setAlignment(Qt.AlignCenter)
+        self.person_pesel_label = QLabel(self.person_page)
+        self.person_pesel_label.setObjectName(u"person_pesel_label")
+        self.person_pesel_label.setMinimumSize(QSize(120, 0))
+        self.person_pesel_label.setAlignment(Qt.AlignCenter)
 
-        self.formLayout.setWidget(2, QFormLayout.LabelRole, self.label_3)
+        self.person_section.setWidget(2, QFormLayout.LabelRole, self.person_pesel_label)
 
-        self.label_4 = QLabel(self.person_page)
-        self.label_4.setObjectName(u"label_4")
-        self.label_4.setMinimumSize(QSize(96, 0))
-        self.label_4.setAlignment(Qt.AlignCenter)
+        self.person_sex_label = QLabel(self.person_page)
+        self.person_sex_label.setObjectName(u"person_sex_label")
+        self.person_sex_label.setMinimumSize(QSize(120, 0))
+        self.person_sex_label.setAlignment(Qt.AlignCenter)
 
-        self.formLayout.setWidget(3, QFormLayout.LabelRole, self.label_4)
+        self.person_section.setWidget(3, QFormLayout.LabelRole, self.person_sex_label)
 
-        self.lineEdit = QLineEdit(self.person_page)
-        self.lineEdit.setObjectName(u"lineEdit")
+        self.person_name_line_edit = QLineEdit(self.person_page)
+        self.person_name_line_edit.setObjectName(u"person_name_line_edit")
 
-        self.formLayout.setWidget(0, QFormLayout.FieldRole, self.lineEdit)
+        self.person_section.setWidget(0, QFormLayout.FieldRole, self.person_name_line_edit)
 
-        self.lineEdit_2 = QLineEdit(self.person_page)
-        self.lineEdit_2.setObjectName(u"lineEdit_2")
+        self.person_surname_line_edit = QLineEdit(self.person_page)
+        self.person_surname_line_edit.setObjectName(u"person_surname_line_edit")
 
-        self.formLayout.setWidget(1, QFormLayout.FieldRole, self.lineEdit_2)
+        self.person_section.setWidget(1, QFormLayout.FieldRole, self.person_surname_line_edit)
 
-        self.lineEdit_3 = QLineEdit(self.person_page)
-        self.lineEdit_3.setObjectName(u"lineEdit_3")
+        self.person_pesel_line_edit = QLineEdit(self.person_page)
+        self.person_pesel_line_edit.setObjectName(u"person_pesel_line_edit")
 
-        self.formLayout.setWidget(2, QFormLayout.FieldRole, self.lineEdit_3)
+        self.person_section.setWidget(2, QFormLayout.FieldRole, self.person_pesel_line_edit)
 
-        self.comboBox = QComboBox(self.person_page)
-        self.comboBox.addItem("")
-        self.comboBox.addItem("")
-        self.comboBox.setObjectName(u"comboBox")
+        self.person_sex_combo_box = QComboBox(self.person_page)
+        self.person_sex_combo_box.addItem("")
+        self.person_sex_combo_box.addItem("")
+        self.person_sex_combo_box.setObjectName(u"person_sex_combo_box")
 
-        self.formLayout.setWidget(3, QFormLayout.FieldRole, self.comboBox)
+        self.person_section.setWidget(3, QFormLayout.FieldRole, self.person_sex_combo_box)
 
 
-        self.verticalLayout_2.addLayout(self.formLayout)
+        self.verticalLayout_2.addLayout(self.person_section)
 
         self.additional_data_stack.addWidget(self.person_page)
         self.company_page = QWidget()
@@ -178,35 +217,35 @@ class Ui_ClientDialog(object):
         self.verticalLayout_3 = QVBoxLayout(self.company_page)
         self.verticalLayout_3.setObjectName(u"verticalLayout_3")
         self.verticalLayout_3.setContentsMargins(0, 0, 0, 0)
-        self.formLayout_2 = QFormLayout()
-        self.formLayout_2.setObjectName(u"formLayout_2")
-        self.formLayout_2.setLabelAlignment(Qt.AlignCenter)
-        self.label_5 = QLabel(self.company_page)
-        self.label_5.setObjectName(u"label_5")
-        self.label_5.setMinimumSize(QSize(96, 0))
-        self.label_5.setAlignment(Qt.AlignCenter)
+        self.company_section = QFormLayout()
+        self.company_section.setObjectName(u"company_section")
+        self.company_section.setLabelAlignment(Qt.AlignCenter)
+        self.company_name_label = QLabel(self.company_page)
+        self.company_name_label.setObjectName(u"company_name_label")
+        self.company_name_label.setMinimumSize(QSize(120, 0))
+        self.company_name_label.setAlignment(Qt.AlignCenter)
 
-        self.formLayout_2.setWidget(0, QFormLayout.LabelRole, self.label_5)
+        self.company_section.setWidget(0, QFormLayout.LabelRole, self.company_name_label)
 
-        self.label_6 = QLabel(self.company_page)
-        self.label_6.setObjectName(u"label_6")
-        self.label_6.setMinimumSize(QSize(96, 0))
-        self.label_6.setAlignment(Qt.AlignCenter)
+        self.company_nip_label = QLabel(self.company_page)
+        self.company_nip_label.setObjectName(u"company_nip_label")
+        self.company_nip_label.setMinimumSize(QSize(120, 0))
+        self.company_nip_label.setAlignment(Qt.AlignCenter)
 
-        self.formLayout_2.setWidget(1, QFormLayout.LabelRole, self.label_6)
+        self.company_section.setWidget(1, QFormLayout.LabelRole, self.company_nip_label)
 
-        self.lineEdit_4 = QLineEdit(self.company_page)
-        self.lineEdit_4.setObjectName(u"lineEdit_4")
+        self.company_name_line_edit = QLineEdit(self.company_page)
+        self.company_name_line_edit.setObjectName(u"company_name_line_edit")
 
-        self.formLayout_2.setWidget(0, QFormLayout.FieldRole, self.lineEdit_4)
+        self.company_section.setWidget(0, QFormLayout.FieldRole, self.company_name_line_edit)
 
-        self.lineEdit_5 = QLineEdit(self.company_page)
-        self.lineEdit_5.setObjectName(u"lineEdit_5")
+        self.company_nip_line_edit = QLineEdit(self.company_page)
+        self.company_nip_line_edit.setObjectName(u"company_nip_line_edit")
 
-        self.formLayout_2.setWidget(1, QFormLayout.FieldRole, self.lineEdit_5)
+        self.company_section.setWidget(1, QFormLayout.FieldRole, self.company_nip_line_edit)
 
 
-        self.verticalLayout_3.addLayout(self.formLayout_2)
+        self.verticalLayout_3.addLayout(self.company_section)
 
         self.additional_data_stack.addWidget(self.company_page)
 
@@ -244,25 +283,27 @@ class Ui_ClientDialog(object):
 
     def retranslateUi(self, ClientDialog):
         ClientDialog.setWindowTitle(QCoreApplication.translate("ClientDialog", u"Add client...", None))
+        self.country_label.setText(QCoreApplication.translate("ClientDialog", u"Country", None))
+        self.city_label.setText(QCoreApplication.translate("ClientDialog", u"City", None))
+        self.postcode_label.setText(QCoreApplication.translate("ClientDialog", u"Postcode", None))
+        self.street_label.setText(QCoreApplication.translate("ClientDialog", u"Street", None))
+        self.house_label.setText(QCoreApplication.translate("ClientDialog", u"House number", None))
+        self.apartment_label.setText(QCoreApplication.translate("ClientDialog", u"Apartment number", None))
         self.email_label.setText(QCoreApplication.translate("ClientDialog", u"E-mail", None))
         self.phone_label.setText(QCoreApplication.translate("ClientDialog", u"Phone number", None))
         self.selector_label.setText(QCoreApplication.translate("ClientDialog", u"Account type", None))
         self.selector_combo_box.setItemText(0, QCoreApplication.translate("ClientDialog", u"Person", None))
         self.selector_combo_box.setItemText(1, QCoreApplication.translate("ClientDialog", u"Company", None))
 
-        self.address_button.setText(QCoreApplication.translate("ClientDialog", u"Choose address...", None))
-        self.id_label.setText(QCoreApplication.translate("ClientDialog", u"ID:", None))
-        self.id_value_label.setText("")
-        self.address_label.setText(QCoreApplication.translate("ClientDialog", u"Address", None))
-        self.label.setText(QCoreApplication.translate("ClientDialog", u"Name", None))
-        self.label_2.setText(QCoreApplication.translate("ClientDialog", u"Surname", None))
-        self.label_3.setText(QCoreApplication.translate("ClientDialog", u"PESEL", None))
-        self.label_4.setText(QCoreApplication.translate("ClientDialog", u"Sex", None))
-        self.comboBox.setItemText(0, QCoreApplication.translate("ClientDialog", u"K", None))
-        self.comboBox.setItemText(1, QCoreApplication.translate("ClientDialog", u"M", None))
+        self.person_name_label.setText(QCoreApplication.translate("ClientDialog", u"Name", None))
+        self.person_surname_label.setText(QCoreApplication.translate("ClientDialog", u"Surname", None))
+        self.person_pesel_label.setText(QCoreApplication.translate("ClientDialog", u"PESEL", None))
+        self.person_sex_label.setText(QCoreApplication.translate("ClientDialog", u"Sex", None))
+        self.person_sex_combo_box.setItemText(0, QCoreApplication.translate("ClientDialog", u"K", None))
+        self.person_sex_combo_box.setItemText(1, QCoreApplication.translate("ClientDialog", u"M", None))
 
-        self.label_5.setText(QCoreApplication.translate("ClientDialog", u"Name", None))
-        self.label_6.setText(QCoreApplication.translate("ClientDialog", u"NIP", None))
+        self.company_name_label.setText(QCoreApplication.translate("ClientDialog", u"Name", None))
+        self.company_nip_label.setText(QCoreApplication.translate("ClientDialog", u"NIP", None))
         self.create_button.setText(QCoreApplication.translate("ClientDialog", u"Create", None))
         self.cancel_button.setText(QCoreApplication.translate("ClientDialog", u"Cancel", None))
     # retranslateUi

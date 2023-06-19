@@ -35,8 +35,8 @@ class Ui_ClientsWidget(object):
         self.verticalLayout.setObjectName(u"verticalLayout")
         self.verticalLayout.setContentsMargins(0, 0, 0, 0)
         self.people_table = QTableWidget(self.people_page)
-        if (self.people_table.columnCount() < 8):
-            self.people_table.setColumnCount(8)
+        if (self.people_table.columnCount() < 7):
+            self.people_table.setColumnCount(7)
         __qtablewidgetitem = QTableWidgetItem()
         self.people_table.setHorizontalHeaderItem(0, __qtablewidgetitem)
         __qtablewidgetitem1 = QTableWidgetItem()
@@ -51,8 +51,6 @@ class Ui_ClientsWidget(object):
         self.people_table.setHorizontalHeaderItem(5, __qtablewidgetitem5)
         __qtablewidgetitem6 = QTableWidgetItem()
         self.people_table.setHorizontalHeaderItem(6, __qtablewidgetitem6)
-        __qtablewidgetitem7 = QTableWidgetItem()
-        self.people_table.setHorizontalHeaderItem(7, __qtablewidgetitem7)
         self.people_table.setObjectName(u"people_table")
         self.people_table.setAutoScroll(False)
         self.people_table.setEditTriggers(QAbstractItemView.NoEditTriggers)
@@ -72,20 +70,18 @@ class Ui_ClientsWidget(object):
         self.verticalLayout_2.setObjectName(u"verticalLayout_2")
         self.verticalLayout_2.setContentsMargins(0, 0, 0, 0)
         self.companies_table = QTableWidget(self.companies_page)
-        if (self.companies_table.columnCount() < 6):
-            self.companies_table.setColumnCount(6)
+        if (self.companies_table.columnCount() < 5):
+            self.companies_table.setColumnCount(5)
+        __qtablewidgetitem7 = QTableWidgetItem()
+        self.companies_table.setHorizontalHeaderItem(0, __qtablewidgetitem7)
         __qtablewidgetitem8 = QTableWidgetItem()
-        self.companies_table.setHorizontalHeaderItem(0, __qtablewidgetitem8)
+        self.companies_table.setHorizontalHeaderItem(1, __qtablewidgetitem8)
         __qtablewidgetitem9 = QTableWidgetItem()
-        self.companies_table.setHorizontalHeaderItem(1, __qtablewidgetitem9)
+        self.companies_table.setHorizontalHeaderItem(2, __qtablewidgetitem9)
         __qtablewidgetitem10 = QTableWidgetItem()
-        self.companies_table.setHorizontalHeaderItem(2, __qtablewidgetitem10)
+        self.companies_table.setHorizontalHeaderItem(3, __qtablewidgetitem10)
         __qtablewidgetitem11 = QTableWidgetItem()
-        self.companies_table.setHorizontalHeaderItem(3, __qtablewidgetitem11)
-        __qtablewidgetitem12 = QTableWidgetItem()
-        self.companies_table.setHorizontalHeaderItem(4, __qtablewidgetitem12)
-        __qtablewidgetitem13 = QTableWidgetItem()
-        self.companies_table.setHorizontalHeaderItem(5, __qtablewidgetitem13)
+        self.companies_table.setHorizontalHeaderItem(4, __qtablewidgetitem11)
         self.companies_table.setObjectName(u"companies_table")
         self.companies_table.setAutoScroll(False)
         self.companies_table.setEditTriggers(QAbstractItemView.NoEditTriggers)
@@ -144,6 +140,12 @@ class Ui_ClientsWidget(object):
 
         self.options_section.addItem(self.options_spacer)
 
+        self.delete_button = QPushButton(ClientsWidget)
+        self.delete_button.setObjectName(u"delete_button")
+        self.delete_button.setEnabled(False)
+
+        self.options_section.addWidget(self.delete_button)
+
         self.account_info_button = QPushButton(ClientsWidget)
         self.account_info_button.setObjectName(u"account_info_button")
         self.account_info_button.setEnabled(False)
@@ -166,39 +168,36 @@ class Ui_ClientsWidget(object):
     def retranslateUi(self, ClientsWidget):
         ClientsWidget.setWindowTitle(QCoreApplication.translate("ClientsWidget", u"Form", None))
         ___qtablewidgetitem = self.people_table.horizontalHeaderItem(0)
-        ___qtablewidgetitem.setText(QCoreApplication.translate("ClientsWidget", u"ID", None));
+        ___qtablewidgetitem.setText(QCoreApplication.translate("ClientsWidget", u"Address", None));
         ___qtablewidgetitem1 = self.people_table.horizontalHeaderItem(1)
-        ___qtablewidgetitem1.setText(QCoreApplication.translate("ClientsWidget", u"Address ID", None));
+        ___qtablewidgetitem1.setText(QCoreApplication.translate("ClientsWidget", u"E-mail", None));
         ___qtablewidgetitem2 = self.people_table.horizontalHeaderItem(2)
-        ___qtablewidgetitem2.setText(QCoreApplication.translate("ClientsWidget", u"E-mail", None));
+        ___qtablewidgetitem2.setText(QCoreApplication.translate("ClientsWidget", u"Phone number", None));
         ___qtablewidgetitem3 = self.people_table.horizontalHeaderItem(3)
-        ___qtablewidgetitem3.setText(QCoreApplication.translate("ClientsWidget", u"Phone number", None));
+        ___qtablewidgetitem3.setText(QCoreApplication.translate("ClientsWidget", u"Name", None));
         ___qtablewidgetitem4 = self.people_table.horizontalHeaderItem(4)
-        ___qtablewidgetitem4.setText(QCoreApplication.translate("ClientsWidget", u"Name", None));
+        ___qtablewidgetitem4.setText(QCoreApplication.translate("ClientsWidget", u"Surname", None));
         ___qtablewidgetitem5 = self.people_table.horizontalHeaderItem(5)
-        ___qtablewidgetitem5.setText(QCoreApplication.translate("ClientsWidget", u"Surname", None));
+        ___qtablewidgetitem5.setText(QCoreApplication.translate("ClientsWidget", u"PESEL", None));
         ___qtablewidgetitem6 = self.people_table.horizontalHeaderItem(6)
-        ___qtablewidgetitem6.setText(QCoreApplication.translate("ClientsWidget", u"PESEL", None));
-        ___qtablewidgetitem7 = self.people_table.horizontalHeaderItem(7)
-        ___qtablewidgetitem7.setText(QCoreApplication.translate("ClientsWidget", u"Sex", None));
-        ___qtablewidgetitem8 = self.companies_table.horizontalHeaderItem(0)
-        ___qtablewidgetitem8.setText(QCoreApplication.translate("ClientsWidget", u"ID", None));
-        ___qtablewidgetitem9 = self.companies_table.horizontalHeaderItem(1)
-        ___qtablewidgetitem9.setText(QCoreApplication.translate("ClientsWidget", u"Address ID", None));
-        ___qtablewidgetitem10 = self.companies_table.horizontalHeaderItem(2)
-        ___qtablewidgetitem10.setText(QCoreApplication.translate("ClientsWidget", u"E-mail", None));
-        ___qtablewidgetitem11 = self.companies_table.horizontalHeaderItem(3)
-        ___qtablewidgetitem11.setText(QCoreApplication.translate("ClientsWidget", u"Phone number", None));
-        ___qtablewidgetitem12 = self.companies_table.horizontalHeaderItem(4)
-        ___qtablewidgetitem12.setText(QCoreApplication.translate("ClientsWidget", u"Name", None));
-        ___qtablewidgetitem13 = self.companies_table.horizontalHeaderItem(5)
-        ___qtablewidgetitem13.setText(QCoreApplication.translate("ClientsWidget", u"NIP", None));
+        ___qtablewidgetitem6.setText(QCoreApplication.translate("ClientsWidget", u"Sex", None));
+        ___qtablewidgetitem7 = self.companies_table.horizontalHeaderItem(0)
+        ___qtablewidgetitem7.setText(QCoreApplication.translate("ClientsWidget", u"Address", None));
+        ___qtablewidgetitem8 = self.companies_table.horizontalHeaderItem(1)
+        ___qtablewidgetitem8.setText(QCoreApplication.translate("ClientsWidget", u"E-mail", None));
+        ___qtablewidgetitem9 = self.companies_table.horizontalHeaderItem(2)
+        ___qtablewidgetitem9.setText(QCoreApplication.translate("ClientsWidget", u"Phone number", None));
+        ___qtablewidgetitem10 = self.companies_table.horizontalHeaderItem(3)
+        ___qtablewidgetitem10.setText(QCoreApplication.translate("ClientsWidget", u"Name", None));
+        ___qtablewidgetitem11 = self.companies_table.horizontalHeaderItem(4)
+        ___qtablewidgetitem11.setText(QCoreApplication.translate("ClientsWidget", u"NIP", None));
         self.account_type_label.setText(QCoreApplication.translate("ClientsWidget", u"Account type", None))
         self.account_type_combo.setItemText(0, QCoreApplication.translate("ClientsWidget", u"Person", None))
         self.account_type_combo.setItemText(1, QCoreApplication.translate("ClientsWidget", u"Company", None))
 
         self.options_label.setText(QCoreApplication.translate("ClientsWidget", u"Options", None))
         self.add_account_button.setText(QCoreApplication.translate("ClientsWidget", u"Add client...", None))
+        self.delete_button.setText(QCoreApplication.translate("ClientsWidget", u"Delete client", None))
         self.account_info_button.setText(QCoreApplication.translate("ClientsWidget", u"Detailed client info...", None))
     # retranslateUi
 
