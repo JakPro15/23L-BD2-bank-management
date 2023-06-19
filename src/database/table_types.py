@@ -2,12 +2,13 @@ from __future__ import annotations
 
 from abc import ABC
 from dataclasses import dataclass
-from PySide6.QtCore import QDate
-import PySide6.QtSql as sql
 
+import PySide6.QtSql as sql
+from PySide6.QtCore import QDate
+
+from src.database.abstract_data import Data, ModifiableData
 from src.database.database import Database
 from src.database.database_errors import DatabaseTransactionError
-from src.database.abstract_data import Data, ModifiableData
 
 
 @dataclass
@@ -16,12 +17,19 @@ class AddressData(Data):
     def table_name() -> str:
         return "ADRESY"
 
+    address_id: int | None = None
     country: str = None
     city: str = None
     post_code: str = None
     street: str = None
     house_nr: str = None
     apartment_nr: str | None = None
+
+    def __str__(self) -> str:
+        apartment_string = (
+            f"/{self.apartment_nr}" if self.apartment_nr is not None else ""
+        )
+        return f"{self.street} {self.house_nr}{apartment_string}, {self.post_code} {self.city}, {self.country}"
 
 
 @dataclass
@@ -33,7 +41,9 @@ class ClientData(ModifiableData, ABC):
 
     def accounts(self, database) -> list[AccountData]:
         query = sql.QSqlQuery(database.connection)
-        query.prepare("SELECT * FROM KONTA_KLIENTOW WHERE ID_klienta = :client_id")
+        query.prepare(
+            "SELECT * FROM KONTA_KLIENTOW WHERE ID_klienta = :client_id"
+        )
         query.bindValue(":client_id", self.id)
         if not query.exec():
             raise DatabaseTransactionError(
@@ -137,7 +147,9 @@ class AccountData(ModifiableData):
 
     def clients(self, database: Database) -> list[ClientData]:
         query = sql.QSqlQuery(database.connection)
-        query.prepare("SELECT * FROM WLASCICIELE_KONT WHERE ID_konta = :account_id")
+        query.prepare(
+            "SELECT * FROM WLASCICIELE_KONT WHERE ID_konta = :account_id"
+        )
         query.bindValue(":account_id", self.id)
         if not query.exec():
             raise DatabaseTransactionError(

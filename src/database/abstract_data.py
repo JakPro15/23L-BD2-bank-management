@@ -1,12 +1,15 @@
 from abc import ABC, abstractmethod
-from typing import Type, Self, Any, get_args, get_type_hints, get_origin
-from types import UnionType, NoneType
+from types import NoneType, UnionType
+from typing import Any, Self, Type, get_args, get_origin, get_type_hints
+
+import PySide6.QtSql as sql
 from PySide6.QtCore import QDate
 
 from src.database.database import Database
-from src.database.database_errors import DatabaseTransactionError, IdMissingError
-
-import PySide6.QtSql as sql
+from src.database.database_errors import (
+    DatabaseTransactionError,
+    IdMissingError,
+)
 
 
 class Data(ABC):
@@ -20,14 +23,20 @@ class Data(ABC):
         parameters: dict[str, Any] = {}
         for attribute in vars(cls()):
             if attribute in attribute_mapping:
-                parameters[attribute] = query.value(attribute_mapping[attribute])
-                if get_origin(get_type_hints(cls)[attribute]) == UnionType and \
-                        get_args(get_type_hints(cls)[attribute])[1] == NoneType \
-                        and parameters[attribute] in {"", QDate(0, 0, 0), -1.0}:
+                parameters[attribute] = query.value(
+                    attribute_mapping[attribute]
+                )
+                if (
+                    get_origin(get_type_hints(cls)[attribute]) == UnionType
+                    and get_args(get_type_hints(cls)[attribute])[1] == NoneType
+                    and parameters[attribute] in {"", QDate(0, 0, 0), -1.0}
+                ):
                     parameters[attribute] = None
             else:
                 if get_origin(get_type_hints(cls)[attribute]) == UnionType:
-                    attribute_type: Type[Data] = get_args(get_type_hints(cls)[attribute])[0]
+                    attribute_type: Type[Data] = get_args(
+                        get_type_hints(cls)[attribute]
+                    )[0]
                 else:
                     attribute_type: Type[Data] = get_type_hints(cls)[attribute]
                 parameters[attribute] = attribute_type.from_query(query)
@@ -62,7 +71,9 @@ class Data(ABC):
                 if attribute in attribute_mapping:
                     attributes += f":{attribute}"
                 else:
-                    attributes += getattr(self, attribute)._attribute_names_for_query()[1]
+                    attributes += getattr(
+                        self, attribute
+                    )._attribute_names_for_query()[1]
         return id, attributes
 
     def bind_non_id_attributes(self, query: sql.QSqlQuery) -> None:
@@ -95,12 +106,16 @@ class ModifiableData(Data, ABC):
         for attribute, value in vars(self).items():
             if attribute[-3:] == "_id":
                 return value
-        raise IdMissingError(f"Object of type {type(self).__name__} has no ID!")
+        raise IdMissingError(
+            f"Object of type {type(self).__name__} has no ID!"
+        )
 
     def insert(self, database: Database) -> None:
         with database.transaction():
             id_name, attributes = self._attribute_names_for_query()
-            query_string = f"CALL {self.insert_procedure_name()}(@id, {attributes})"
+            query_string = (
+                f"CALL {self.insert_procedure_name()}(@id, {attributes})"
+            )
             query = database.create_query(self, query_string)
             if not query.exec():
                 raise DatabaseTransactionError(
@@ -112,7 +127,9 @@ class ModifiableData(Data, ABC):
     def update(self, database: Database):
         with database.transaction():
             id, attributes = self._attribute_names_for_query()
-            query_string = f"CALL {self.update_procedure_name()}(:id, {attributes})"
+            query_string = (
+                f"CALL {self.update_procedure_name()}(:id, {attributes})"
+            )
             query = database.create_query(self, query_string)
             query.bindValue(":id", getattr(self, id))
             if not query.exec():
@@ -134,6 +151,7 @@ class ModifiableData(Data, ABC):
 
 
 attribute_mapping: dict[str, str] = {
+    "address_id": "ID_adresu",
     "country": "kraj",
     "city": "miejscowosc",
     "post_code": "kod_pocztowy",
@@ -154,5 +172,5 @@ attribute_mapping: dict[str, str] = {
     "creation_date": "data_utworzenia",
     "closing_date": "data_zamkniecia",
     "transaction_limit": "limit_transakcji",
-    "version": "wersja"
+    "version": "wersja",
 }

@@ -34,7 +34,7 @@ class AddressesWidget(QWidget):
         new_row = self._ui.addresses_list.rowCount()
         self._ui.addresses_list.insertRow(new_row)
         row_entry = [
-            str(0),
+            str(data.address_id),
             data.country,
             data.city,
             data.post_code,

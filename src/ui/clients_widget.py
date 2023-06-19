@@ -35,7 +35,7 @@ class ClientsWidget(QWidget):
         self._ui.people_table.insertRow(new_row)
         row_entry = [
             str(data.client_id),
-            str(0),
+            str(data.address),
             set_optional_str(data.email),
             set_optional_str(data.phone_nr),
             data.first_name,
@@ -51,7 +51,7 @@ class ClientsWidget(QWidget):
         self._ui.companies_table.insertRow(new_row)
         row_entry = [
             str(data.id),
-            str(0),
+            str(data.address),
             set_optional_str(data.email),
             set_optional_str(data.phone_nr),
             data.name,

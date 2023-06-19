@@ -1,15 +1,32 @@
 #!/usr/bin/python3.11
 from db_connection_testing import testing_database
-from src.database.table_types import PersonData, CompanyData, AddressData
+
+from src.database.table_types import AddressData, CompanyData, PersonData
 
 
 def test_osoba_insert(database):
     number_of_addresses = len(AddressData.load_all(database))
-    new1 = PersonData(None, AddressData("Polska", "ABC", "11-400", "Waryńskiego", "5A", None),
-                      "hehe@test.com", "123456789", "Ja", "Ty", "01232455644", "M")
+    new1 = PersonData(
+        None,
+        AddressData("Polska", "ABC", "11-400", "Waryńskiego", "5A", None),
+        "hehe@test.com",
+        "123456789",
+        "Ja",
+        "Ty",
+        "01232455644",
+        "M",
+    )
     new1.insert(database)
-    new2 = PersonData(None, AddressData("Polska", "ABC", "11-400", "Waryńskiego", "34F", None),
-                      "hehe@test.com", "123456789", "Ja", "Ty", "01232455655", "M")
+    new2 = PersonData(
+        None,
+        AddressData("Polska", "ABC", "11-400", "Waryńskiego", "34F", None),
+        "hehe@test.com",
+        "123456789",
+        "Ja",
+        "Ty",
+        "01232455655",
+        "M",
+    )
     new2.insert(database)
     assert new1 == PersonData.load_all(database)[-2]
     assert new2 == PersonData.load_all(database)[-1]
@@ -41,11 +58,23 @@ def test_osoba_delete(database):
 
 def test_company_insert(database):
     number_of_addresses = len(AddressData.load_all(database))
-    new1 = CompanyData(None, AddressData("Polska", "ABC", "11-400", "Waryńskiego", "5A", None),
-                       "hehe@test.com", "123456789", "Ja", "012324556445")
+    new1 = CompanyData(
+        None,
+        AddressData("Polska", "ABC", "11-400", "Waryńskiego", "5A", None),
+        "hehe@test.com",
+        "123456789",
+        "Ja",
+        "012324556445",
+    )
     new1.insert(database)
-    new2 = CompanyData(None, AddressData("Polska", "ABC", "11-400", "Waryńskiego", "34F", None),
-                       "hehe@test.com", "123456789", "My", "012324556556")
+    new2 = CompanyData(
+        None,
+        AddressData("Polska", "ABC", "11-400", "Waryńskiego", "34F", None),
+        "hehe@test.com",
+        "123456789",
+        "My",
+        "012324556556",
+    )
     new2.insert(database)
     assert new1 == CompanyData.load_all(database)[-2]
     assert new2 == CompanyData.load_all(database)[-1]

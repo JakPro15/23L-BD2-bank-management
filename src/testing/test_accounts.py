@@ -1,19 +1,35 @@
 #!/usr/bin/python3.11
-from PySide6.QtCore import QDate
 from db_connection_testing import testing_database
-from src.database.table_types import AccountTypeData, AccountData
+from PySide6.QtCore import QDate
+
+from src.database.table_types import AccountData, AccountTypeData
 
 
 def test_account_insert(database):
     number_of_account_types = len(AccountTypeData.load_all(database))
-    new1 = AccountData(None, "74125082031392539123895171", QDate(2023, 6, 14), None, None, AccountTypeData("oszcz", 1))
+    new1 = AccountData(
+        None,
+        "74125082031392539123895171",
+        QDate(2023, 6, 14),
+        None,
+        None,
+        AccountTypeData("oszcz", 1),
+    )
     new1.insert(database)
-    new2 = AccountData(None, "74125082031392123456867545", QDate(2022, 5, 14), QDate(2023, 2, 1),
-                       None, AccountTypeData("oszcz", 2))
+    new2 = AccountData(
+        None,
+        "74125082031392123456867545",
+        QDate(2022, 5, 14),
+        QDate(2023, 2, 1),
+        None,
+        AccountTypeData("oszcz", 2),
+    )
     new2.insert(database)
     assert new1 == AccountData.load_all(database)[-2]
     assert new2 == AccountData.load_all(database)[-1]
-    assert len(AccountTypeData.load_all(database)) == number_of_account_types + 2
+    assert (
+        len(AccountTypeData.load_all(database)) == number_of_account_types + 2
+    )
 
 
 def test_account_update(database):
@@ -24,7 +40,9 @@ def test_account_update(database):
     updated.update(database)
 
     assert updated == AccountData.load_all(database)[-2]
-    assert len(AccountTypeData.load_all(database)) == number_of_account_types - 1
+    assert (
+        len(AccountTypeData.load_all(database)) == number_of_account_types - 1
+    )
 
 
 def test_account_delete(database):
@@ -36,7 +54,9 @@ def test_account_delete(database):
     deleted = AccountData.load_all(database)[-1]
     deleted.delete(database)
     assert deleted != AccountData.load_all(database)[-1]
-    assert len(AccountTypeData.load_all(database)) == number_of_account_types - 1
+    assert (
+        len(AccountTypeData.load_all(database)) == number_of_account_types - 1
+    )
 
 
 def test_accounts_clients(database):
