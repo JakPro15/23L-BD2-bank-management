@@ -119,7 +119,7 @@ class AccountTypeData(Data):
     version: int = None
 
     def __str__(self) -> str:
-        return f"{self.version} v.{self.name}"
+        return f"{self.name} v.{self.version}"
 
 
 @dataclass

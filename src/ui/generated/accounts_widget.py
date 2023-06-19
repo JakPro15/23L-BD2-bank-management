@@ -82,11 +82,11 @@ class Ui_AccountsWidget(object):
 
         self.options_section.addItem(self.options_spacer)
 
-        self.pushButton = QPushButton(AccountsWidget)
-        self.pushButton.setObjectName(u"pushButton")
-        self.pushButton.setEnabled(False)
+        self.delete_button = QPushButton(AccountsWidget)
+        self.delete_button.setObjectName(u"delete_button")
+        self.delete_button.setEnabled(False)
 
-        self.options_section.addWidget(self.pushButton)
+        self.options_section.addWidget(self.delete_button)
 
         self.account_info_button = QPushButton(AccountsWidget)
         self.account_info_button.setObjectName(u"account_info_button")
@@ -117,7 +117,7 @@ class Ui_AccountsWidget(object):
         ___qtablewidgetitem4.setText(QCoreApplication.translate("AccountsWidget", u"Account type", None));
         self.options_label.setText(QCoreApplication.translate("AccountsWidget", u"Options", None))
         self.add_account_button.setText(QCoreApplication.translate("AccountsWidget", u"Add account...", None))
-        self.pushButton.setText(QCoreApplication.translate("AccountsWidget", u"Delete account", None))
+        self.delete_button.setText(QCoreApplication.translate("AccountsWidget", u"Delete account", None))
         self.account_info_button.setText(QCoreApplication.translate("AccountsWidget", u"Detailed account info...", None))
     # retranslateUi
 

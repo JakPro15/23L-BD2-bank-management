@@ -21,12 +21,30 @@ class ClientsWidget(QWidget):
         self._ui.people_table.currentCellChanged.connect(
             self._enable_lower_buttons
         )
+        self._ui.people_table.currentCellChanged.connect(
+            lambda i: print(
+                [
+                    a.account_nr
+                    for a in self._people_data[i].accounts(self._database)
+                ]
+            )
+        )
+        self._ui.companies_table.currentCellChanged.connect(
+            self._enable_lower_buttons
+        )
+        self._ui.companies_table.currentCellChanged.connect(
+            lambda i: print(
+                [
+                    a.account_nr
+                    for a in self._companies_data[i].accounts(self._database)
+                ]
+            )
+        )
         self._ui.account_info_button.clicked.connect(self._show_info_dialog)
         self._ui.delete_button.clicked.connect(self._delete_procedure)
 
     def _delete_client(self, data: ClientData):
         data.delete(self._database)
-        print("deleted")
         self._reload_database()
 
     def _delete_procedure(self):
@@ -36,16 +54,20 @@ class ClientsWidget(QWidget):
             case QMessageBox.Cancel:
                 print("keep")
             case QMessageBox.Ok:
-                if self._ui.account_type_combo.currentIndex():
-                    idx = self._ui.companies_table.currentRow()
-                    data = self._companies_data[idx]
-                else:
-                    idx = self._ui.people_table.currentRow()
-                    data = self._people_data[idx]
+                data = self._current_client()
                 try:
                     self._delete_client(data)
+                    print("deleted")
                 except DatabaseTransactionError as e:
                     print(e)
+
+    def _current_client(self) -> ClientData:
+        if self._ui.table_stack.currentIndex():
+            idx = self._ui.companies_table.currentRow()
+            return self._companies_data[idx]
+        else:
+            idx = self._ui.people_table.currentRow()
+            return self._people_data[idx]
 
     def _enable_lower_buttons(self):
         self._ui.account_info_button.setEnabled(True)
@@ -56,12 +78,7 @@ class ClientsWidget(QWidget):
         self._ui.delete_button.setEnabled(False)
 
     def _show_info_dialog(self):
-        idx = self._ui.people_table.currentRow()
-
-        if self._ui.table_stack.currentIndex():
-            data = self._companies_data[idx]
-        else:
-            data = self._people_data[idx]
+        data = self._current_client()
         print(data)
 
     def _add_client_procedure(self):

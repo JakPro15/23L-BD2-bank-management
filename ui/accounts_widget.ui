@@ -137,7 +137,7 @@
       </spacer>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton">
+      <widget class="QPushButton" name="delete_button">
        <property name="enabled">
         <bool>false</bool>
        </property>
