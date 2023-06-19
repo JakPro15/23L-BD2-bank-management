@@ -1,11 +1,13 @@
 from typing import Optional
 
-from PySide6.QtWidgets import QTableWidgetItem, QWidget
+from PySide6.QtWidgets import QMessageBox, QTableWidgetItem, QWidget
 
 from src.database.database import Database
-from src.database.table_types import CompanyData, PersonData
+from src.database.database_errors import DatabaseTransactionError
+from src.database.table_types import ClientData, CompanyData, PersonData
 from src.helpers import set_optional_str
 from src.ui.dialogs.clients_dialog import ClientsDialog
+from src.ui.dialogs.confirm_dialog import ConfirmDialog
 from src.ui.generated.clients_widget import Ui_ClientsWidget
 
 
@@ -20,6 +22,30 @@ class ClientsWidget(QWidget):
             self._enable_lower_buttons
         )
         self._ui.account_info_button.clicked.connect(self._show_info_dialog)
+        self._ui.delete_button.clicked.connect(self._delete_procedure)
+
+    def _delete_client(self, data: ClientData):
+        data.delete(self._database)
+        print("deleted")
+        self._reload_database()
+
+    def _delete_procedure(self):
+        result = ConfirmDialog(self).exec()
+
+        match result:
+            case QMessageBox.Cancel:
+                print("keep")
+            case QMessageBox.Ok:
+                if self._ui.account_type_combo.currentIndex():
+                    idx = self._ui.companies_table.currentRow()
+                    data = self._companies_data[idx]
+                else:
+                    idx = self._ui.people_table.currentRow()
+                    data = self._people_data[idx]
+                try:
+                    self._delete_client(data)
+                except DatabaseTransactionError as e:
+                    print(e)
 
     def _enable_lower_buttons(self):
         self._ui.account_info_button.setEnabled(True)
