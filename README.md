@@ -2,6 +2,7 @@
 Dokumentacja projektu jest zawarta w plikach .pdf w repozytorium:
 * z etapu 1: BD2_z09_etap_1.pdf
 * z etapu 2: BD2_z09_etap_2.pdf
+* z etapu 3: BD2_z09_etap_3.pdf
 
 #### Instrukcja instalacji MySQL
 * Należy uruchomić skrypt instalacyjny `./install.sh`. Jeżeli wyświetlony zostanie napis "Error
