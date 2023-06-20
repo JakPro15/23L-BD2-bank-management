@@ -7,7 +7,9 @@ from src.database.database_errors import DatabaseTransactionError
 from src.database.table_types import ClientData, CompanyData, PersonData
 from src.helpers import set_optional_str
 from src.ui.dialogs.clients_dialog import ClientsDialog
+from src.ui.dialogs.company_info_dialog import CompanyInfoDialog
 from src.ui.dialogs.confirm_dialog import ConfirmDialog
+from src.ui.dialogs.person_info_dialog import PersonInfoDialog
 from src.ui.generated.clients_widget import Ui_ClientsWidget
 
 
@@ -17,28 +19,14 @@ class ClientsWidget(QWidget):
         self._ui = Ui_ClientsWidget()
         self._ui.setupUi(self)
         self._client_dialog = ClientsDialog(self)
+        self._person_info_dialog = PersonInfoDialog(self)
+        self._company_info_dialog = CompanyInfoDialog(self)
         self._ui.add_account_button.clicked.connect(self._add_client_procedure)
         self._ui.people_table.currentCellChanged.connect(
             self._enable_lower_buttons
         )
-        self._ui.people_table.currentCellChanged.connect(
-            lambda i: print(
-                [
-                    a.account_nr
-                    for a in self._people_data[i].accounts(self._database)
-                ]
-            )
-        )
         self._ui.companies_table.currentCellChanged.connect(
             self._enable_lower_buttons
-        )
-        self._ui.companies_table.currentCellChanged.connect(
-            lambda i: print(
-                [
-                    a.account_nr
-                    for a in self._companies_data[i].accounts(self._database)
-                ]
-            )
         )
         self._ui.account_info_button.clicked.connect(self._show_info_dialog)
         self._ui.delete_button.clicked.connect(self._delete_procedure)
@@ -79,7 +67,12 @@ class ClientsWidget(QWidget):
 
     def _show_info_dialog(self):
         data = self._current_client()
-        print(data)
+        if self._ui.account_type_combo.currentIndex():
+            self._company_info_dialog.load_company_info(data)
+            self._company_info_dialog.exec()
+        else:
+            self._person_info_dialog.load_person_info(data)
+            self._person_info_dialog.exec()
 
     def _add_client_procedure(self):
         self._client_dialog._load_database(self._database)
@@ -89,6 +82,8 @@ class ClientsWidget(QWidget):
 
     def _load_database(self, database: Database):
         self._database = database
+        self._person_info_dialog.load_database(self._database)
+        self._company_info_dialog.load_database(self._database)
         self._reload_database()
 
     def _reload_database(self):
