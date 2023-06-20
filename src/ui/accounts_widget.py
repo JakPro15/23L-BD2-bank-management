@@ -7,6 +7,7 @@ from src.database.database import Database
 from src.database.database_errors import DatabaseTransactionError
 from src.database.table_types import AccountData
 from src.helpers import set_optional_str
+from src.ui.dialogs.account_dialog import AccountDialog
 from src.ui.dialogs.confirm_dialog import ConfirmDialog
 from src.ui.generated.accounts_widget import Ui_AccountsWidget
 
@@ -16,8 +17,12 @@ class AccountsWidget(QWidget):
         super().__init__(parent)
         self._ui = Ui_AccountsWidget()
         self._ui.setupUi(self)
+        self._account_dialog = AccountDialog(self)
         self._ui.account_list.currentCellChanged.connect(
             self._enable_lower_buttons
+        )
+        self._ui.add_account_button.clicked.connect(
+            self._add_account_procedure
         )
         self._ui.delete_button.clicked.connect(self._delete_procedure)
         self._ui.account_info_button.clicked.connect(
@@ -25,6 +30,12 @@ class AccountsWidget(QWidget):
                 [i for i in self._current_account().clients(self._database)]
             )
         )
+
+    def _add_account_procedure(self):
+        self._account_dialog.load_database(self._database)
+        result = self._account_dialog.exec()
+        if result:
+            self._reload_database()
 
     def _delete_account(self, data: AccountData):
         data.delete(self._database)
