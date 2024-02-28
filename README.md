@@ -1,3 +1,6 @@
+## BD2 - Obsługa banku
+Projekt ma na celu przygotowanie i zarządzanie bazą danych banku.
+
 #### Dokumentacja projektu
 Dokumentacja projektu jest zawarta w plikach .pdf w repozytorium:
 * z etapu 1: BD2_z09_etap_1.pdf
